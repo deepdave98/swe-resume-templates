@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks the built and published PDFs, compiles the starter ZIPs, and tests placeholder and page-limit warnings. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
+`make test` builds all three templates, runs unit tests, checks PDFs and long entry headings, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -14,6 +14,9 @@ Build the PDFs first, then run from the repository root:
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tests/check_pdf_text.py
 python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
 python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
@@ -66,10 +69,22 @@ Do not accept a new baseline just to clear a failure. Check it against the sourc
 
 ## Check your own resume
 
-These snapshots describe the shipped templates. Your edited resume will differ. Read its extracted text instead of treating a snapshot failure as a quality score:
+The snapshots above describe the shipped templates, not your edited resume. Use the separate checker instead:
 
 ```bash
-pdftotext -layout path/to/your-resume.pdf -
+python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
 ```
 
-Check your name, email, dates, headings, bullet order, and any text split across pages. Extraction output and failure diffs can include personal data; redact them before opening an issue.
+It requires only Python 3.9+ and Poppler, not TeX or the snapshot files. Omit `--max-pages` for no page limit. For a filename starting with a dash, use `python3 scripts/check_resume.py --max-pages 1 -- -resume.pdf`.
+
+The check fails on unreadable or empty files, Poppler errors or warnings, empty text pages, replacement/private-use/control characters, and a page count above your chosen limit. Whitespace, ligatures, punctuation, and language-specific format characters are allowed. Errors name the page or character code, not the surrounding text. Exit codes: `0` passed these checks, `1` failed a check, `2` invalid command arguments.
+
+It runs locally and does not upload, print, or save extracted text. It cannot detect missing words, wrong reading order, clipping, false claims, or ATS compatibility. A pass is not a resume score. Inspect the PDF and read its text:
+
+```bash
+pdftotext -layout "path/to/your-resume.pdf" -
+```
+
+Check your name, email, dates, headings, bullet order, and text split across pages. This manual command prints personal data; redact it before opening an issue. Do the same with snapshot failure diffs, which quote template text.
+
+`make test-personal-pdf` runs the checker against all three published PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.

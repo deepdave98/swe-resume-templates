@@ -1,4 +1,4 @@
-.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-downloads test-starters test-placeholders test-layout test-page-limits clean
+.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits clean
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -29,7 +29,7 @@ experienced:
 downloads:
 	$(PYTHON) scripts/package_templates.py
 
-test: test-unit test-pdf-text test-downloads test-starters test-placeholders test-layout test-page-limits
+test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits
 
 test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
@@ -37,6 +37,11 @@ test-unit:
 test-pdf-text: all
 	$(PYTHON) tests/check_pdf_text.py --no-internship "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" --new-grad "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" --experienced "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf"
 	$(PYTHON) tests/check_pdf_text.py --no-internship "$(OUTPUT_DIR)/no-internship-resume.pdf" --new-grad "$(OUTPUT_DIR)/new-grad-resume.pdf" --experienced "$(OUTPUT_DIR)/experienced-resume.pdf"
+
+test-personal-pdf:
+	$(PYTHON) scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
+	$(PYTHON) scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+	$(PYTHON) scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
 
 test-downloads:
 	$(PYTHON) scripts/package_templates.py --check

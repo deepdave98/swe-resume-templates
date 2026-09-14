@@ -131,21 +131,33 @@ Cut less relevant content first. If the extra page earns its space, change the n
 
 If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
 
-## Check PDF Text
+## Check Your PDF
+
+After editing, download the PDF from Overleaf or build it locally. From the repository root:
+
+```bash
+python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
+```
+
+This checks for empty pages, extraction errors, and replacement, private-use, or control characters. Use `--max-pages 2` for a two-page limit, or omit it for no limit. It runs locally, uploads nothing, and does not print or save your resume text. The checker also works as a standalone script; it does not need the templates or test files.
+
+You need Python 3.9+ and Poppler's `pdftotext` on `PATH`: `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. On Windows, use `py -3` and add Poppler's `bin` directory to `PATH`. No pip packages.
+
+A pass is not an ATS score or a content review. The check cannot verify layout, reading order, missing words, or your claims. Inspect every page and read the extracted text:
+
+```bash
+pdftotext -layout "path/to/your-resume.pdf" -
+```
+
+That command prints personal data. Review it locally; redact it before sharing an issue.
+
+## Template Tests
 
 ```bash
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, and checks long entry headings on Letter and A4. CI runs the same checks.
-
-Tests need Python 3.9+ and Poppler's `pdftotext` on `PATH`. Install them with `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. No pip packages are needed.
-
-This checks Poppler's layout-mode extraction, not an ATS score. After editing your own resume, inspect its text:
-
-```bash
-pdftotext -layout path/to/your-resume.pdf -
-```
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings on Letter and A4, and runs the personal PDF checker. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
@@ -163,7 +175,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 │   └── community/               # Submission template and reviewed index
 ├── output/pdf/                   # Published PDFs
 ├── preview/                      # Published PNG previews
-├── scripts/                      # Rebuild and check starter downloads
+├── scripts/                      # Check your PDF and package starter downloads
 ├── templates/                    # Resume content
 ├── tests/                        # PDF, download, and compile-warning checks
 ├── CONTRIBUTING.md

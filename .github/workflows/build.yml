@@ -38,6 +38,9 @@ jobs:
             python3 scripts/package_templates.py --check
             python3 tests/check_pdf_text.py --no-internship no-internship-resume.pdf --new-grad new-grad-resume.pdf --experienced experienced-resume.pdf
             python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+            python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
+            python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+            python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
             test "$(pdfinfo no-internship-resume.pdf | awk '/^Pages:/ {print $2}')" = "1"
             test "$(pdfinfo new-grad-resume.pdf | awk '/^Pages:/ {print $2}')" = "1"
             test "$(pdfinfo experienced-resume.pdf | awk '/^Pages:/ {print $2}')" = "2"
