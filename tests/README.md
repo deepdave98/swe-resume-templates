@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks the built and published PDFs, compiles the starter ZIPs, and tests placeholder warnings. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
+`make test` builds all three templates, runs unit tests, checks the built and published PDFs, compiles the starter ZIPs, and tests placeholder and page-limit warnings. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -18,6 +18,7 @@ python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
 python3 tests/check_layout.py
+python3 tests/check_page_limits.py
 ```
 
 On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
@@ -43,6 +44,12 @@ The shipped templates intentionally contain placeholders, so their warnings are 
 `make test-layout` compiles long employer, university, location, and date fields on Letter and A4, including missing locations and dates. It rejects overfull boxes, missing or duplicated words, overlapping word bounds, and text outside the margins. A page-end fixture checks that a wrapped heading moves with its role.
 
 Wrapped columns can interleave in layout-mode extraction. These stress tests check word completeness and bounds, not semantic reading order. The shipped templates still use exact page snapshots. Inspect rendered pages before accepting layout changes.
+
+## Page-limit warnings
+
+`make test-page-limits` checks one- and two-page budgets, extra pages, changed budgets, and invalid inputs. Fixtures cover a first build, a shortened rebuild, reset page numbers, discarded pages, and content added at the end of a document. It also checks that enabling reminders leaves extracted text unchanged.
+
+The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
 
 ## Change a baseline
 

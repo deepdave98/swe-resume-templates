@@ -117,13 +117,25 @@ Recompile and open **View logs** in Overleaf (**Logs and output files** in the o
 
 Warnings do not change the PDF or stop compilation. They are reminders, not a final review: unmarked examples and text hidden inside custom commands can pass; literal square brackets may be flagged. Check your education, links, dates, and every claim before sending.
 
+## Page-Limit Reminders
+
+The one-page starters warn if your edits spill onto a second page. The experienced starter warns after two. Check **View logs** in Overleaf or your local compile log for `Page limit exceeded`.
+
+The budget is near the top of `resume.tex`:
+
+```latex
+\resumepagelimit{1}
+```
+
+Cut less relevant content first. If the extra page earns its space, change the number; remove the line to disable the reminder. The check counts pages from the current build. It never shrinks text, changes spacing, or stops compilation.
+
 ## Check PDF Text
 
 ```bash
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder warnings, and checks long entry headings on Letter and A4. CI runs the same checks.
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, and checks long entry headings on Letter and A4. CI runs the same checks.
 
 Tests need Python 3.9+ and Poppler's `pdftotext` on `PATH`. Install them with `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. No pip packages are needed.
 
@@ -151,10 +163,10 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── preview/                      # Published PNG previews
 ├── scripts/                      # Rebuild and check starter downloads
 ├── templates/                    # Resume content
-├── tests/                        # PDF, download, and placeholder checks
+├── tests/                        # PDF, download, and compile-warning checks
 ├── CONTRIBUTING.md
 ├── Makefile
-└── resume.cls                    # Shared styling and placeholder warnings
+└── resume.cls                    # Shared styling and compile warnings
 ```
 
 ## Before Publishing Yours

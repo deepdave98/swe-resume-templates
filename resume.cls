@@ -96,6 +96,42 @@
   }
 \ExplSyntaxOff
 
+% Set a page budget in resume.tex with \resumepagelimit{1} or {2}.
+% Removing that line disables the reminder. No layout values are changed.
+% Read the kernel's shipped-page count after the final page, not the page
+% number or a previous build's .aux file. This also handles page-number resets.
+\ExplSyntaxOn
+\int_new:N \g__resume_page_limit_int
+\NewDocumentCommand{\resumepagelimit}{m}
+  {
+    % Bound the accepted decimal length to avoid TeX integer overflow.
+    % Do not expand custom commands or include the supplied value in the log.
+    \regex_match:nnTF { \A \s* [1-9][0-9]{0,8} \s* \Z } {#1}
+      { \int_gset:Nn \g__resume_page_limit_int {#1} }
+      {
+        \ClassWarning{resume}{Invalid~page~limit.\MessageBreak
+          Use~a~whole~number~from~1~to~999999999,~such~as~
+          \string\resumepagelimit{1}.\MessageBreak
+          The~previous~page~limit~has~not~changed}
+      }
+  }
+\AddToHook{enddocument/afterlastpage}[resume/page-limit]
+  {
+    \int_compare:nNnT { \g__resume_page_limit_int } > {0}
+      {
+        \int_compare:nNnT { \ReadonlyShipoutCounter } > { \g__resume_page_limit_int }
+          {
+            \ClassWarningNoLine{resume}{Page~limit~exceeded:
+              \space\int_use:N \ReadonlyShipoutCounter\space pages;~limit
+              \space\int_use:N \g__resume_page_limit_int.\MessageBreak
+              Cut~less~relevant~content~or~change~\string\resumepagelimit
+              \space if~the~extra~page~is~intentional.\MessageBreak
+              Font~size~and~spacing~have~not~changed}
+          }
+      }
+  }
+\ExplSyntaxOff
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
 
