@@ -17,6 +17,7 @@ python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.
 python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
+python3 tests/check_layout.py
 ```
 
 On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
@@ -36,6 +37,12 @@ Each archive contains only the chosen template as `resume.tex`, the shared class
 `make test-placeholders` compiles small fixtures with XeLaTeX. Sample names, hidden contact URLs, example entry fields, and bracketed prompts must warn. Completed content, comments, and command options must not. The checks also compare extracted text with reminders enabled and disabled.
 
 The shipped templates intentionally contain placeholders, so their warnings are expected. Reminders do not block compilation or certify that a resume is ready. They inspect the template commands and lists, not arbitrary macros or every word in the document.
+
+## Entry layout
+
+`make test-layout` compiles long employer, university, location, and date fields on Letter and A4, including missing locations and dates. It rejects overfull boxes, missing or duplicated words, overlapping word bounds, and text outside the margins. A page-end fixture checks that a wrapped heading moves with its role.
+
+Wrapped columns can interleave in layout-mode extraction. These stress tests check word completeness and bounds, not semantic reading order. The shipped templates still use exact page snapshots. Inspect rendered pages before accepting layout changes.
 
 ## Change a baseline
 

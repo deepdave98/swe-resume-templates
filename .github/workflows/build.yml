@@ -53,6 +53,7 @@ jobs:
 
             python3 tests/check_starter_builds.py
             python3 tests/check_placeholders.py
+            python3 tests/check_layout.py
 
       - name: Upload PDFs and starter ZIPs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

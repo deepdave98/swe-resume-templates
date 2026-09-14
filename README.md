@@ -99,6 +99,10 @@ Leave out the optional summary if you do not need it. Pass `{}` as the location 
 \end{jobduties}
 ```
 
+Long organization names and locations wrap beside the dates. Keep dates concise; do not shrink the font to force a heading onto one line. Unbroken text can still overflow: use a short label for a link instead of printing its full URL.
+
+For A4, use `\documentclass[a4paper]{resume}`. Use `letterpaper` for US Letter. Recompile and inspect every page after changing paper size; line and page breaks can move.
+
 Write what you built, how you built it, and what changed. Experienced bullets should also show scope, tradeoffs, and operational ownership. Use only numbers you can defend.
 
 For role-specific prompts, see the [backend](examples/engineering-bullets.md#backend-engineering), [frontend](examples/engineering-bullets.md#frontend-engineering), and [data engineering](examples/engineering-bullets.md#data-engineering) examples for early-career and experienced engineers.
@@ -119,7 +123,7 @@ Warnings do not change the PDF or stop compilation. They are reminders, not a fi
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, and tests placeholder warnings against unfinished and completed examples. CI runs the same checks.
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder warnings, and checks long entry headings on Letter and A4. CI runs the same checks.
 
 Tests need Python 3.9+ and Poppler's `pdftotext` on `PATH`. Install them with `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. No pip packages are needed.
 

@@ -27,4 +27,10 @@ The included `latexmkrc` selects XeLaTeX. Your output is `resume.pdf`.
 
 For literal text, escape LaTeX characters: `\&`, `\%`, `\$`, `\#`, and `\_`.
 
+## Fit your content
+
+Long organizations and locations wrap beside the dates. Keep dates short; use `{}` for a location you do not need. For links, show a short label instead of a long URL. Unbroken text can still overflow.
+
+Use `\documentclass[a4paper]{resume}` for A4 or `\documentclass[letterpaper]{resume}` for US Letter. Recompile and inspect all pages after changing paper size.
+
 [Bullet examples](https://github.com/deepdave98/swe-resume-templates/blob/main/examples/engineering-bullets.md) · [Section order](https://github.com/deepdave98/swe-resume-templates/blob/main/docs/section-order.md)

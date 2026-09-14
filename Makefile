@@ -1,4 +1,4 @@
-.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-downloads test-starters test-placeholders clean
+.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-downloads test-starters test-placeholders test-layout clean
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -29,7 +29,7 @@ experienced:
 downloads:
 	$(PYTHON) scripts/package_templates.py
 
-test: test-unit test-pdf-text test-downloads test-starters test-placeholders
+test: test-unit test-pdf-text test-downloads test-starters test-placeholders test-layout
 
 test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
@@ -46,6 +46,9 @@ test-starters: test-downloads
 
 test-placeholders:
 	$(PYTHON) tests/check_placeholders.py
+
+test-layout:
+	$(PYTHON) tests/check_layout.py
 
 preview: all
 	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
