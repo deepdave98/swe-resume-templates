@@ -19,6 +19,8 @@ Open **View logs** beside **Recompile** to see warnings (**Logs and output files
 
 `\resumepagelimit{1}` near the top of `resume.tex` warns if the current build exceeds one page; the experienced starter uses `2`. Cut less relevant content first. Change the number if the extra page is intentional, or remove the line to disable the reminder. It never changes the font, spacing, or PDF.
 
+If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
+
 ## Local
 
 With XeLaTeX, `latexmk`, and LaTeX 2020-10-01 or newer installed, run this inside the extracted folder:

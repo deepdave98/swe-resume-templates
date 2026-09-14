@@ -129,6 +129,8 @@ The budget is near the top of `resume.tex`:
 
 Cut less relevant content first. If the extra page earns its space, change the number; remove the line to disable the reminder. The check counts pages from the current build. It never shrinks text, changes spacing, or stops compilation.
 
+If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
+
 ## Check PDF Text
 
 ```bash

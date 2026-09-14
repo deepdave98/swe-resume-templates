@@ -51,6 +51,8 @@ Wrapped columns can interleave in layout-mode extraction. These stress tests che
 
 The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
 
+Resolve LaTeX rerun warnings before checking the final length. When a last-page hook needs another run, the kernel can append a temporary page outside its shipped-page counter. A regression covers a two-page document shortened to one: the temporary page disappears on the next run and the settled count is correct.
+
 ## Change a baseline
 
 After an intentional template edit:

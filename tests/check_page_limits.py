@@ -131,6 +131,21 @@ class PageLimitBuildTests(unittest.TestCase):
         self.assertEqual(warnings, [])
         self.assert_page_count(text, 1)
 
+    def test_last_page_hook_rerun_settles_to_correct_count(self):
+        preamble = "\\resumepagelimit{1}\n\\AddToHook{shipout/lastpage}{\\relax}"
+        warnings, text, project = self.compile(r"First page.\newpage Second page.", preamble)
+        self.assertEqual(warnings, [EXCEEDED + " 2 pages; limit 1."])
+        self.assert_page_count(text, 2)
+        _, temporary, _ = self.compile("Only one page now.", preamble, project)
+        # The kernel bypasses its shipped-page counter for this temporary page.
+        # Users must resolve rerun warnings before treating the count as final.
+        self.assert_page_count(temporary, 2)
+        self.assertIn("Temporary page!", temporary)
+        warnings, settled, _ = self.compile("Only one page now.", preamble, project)
+        self.assertEqual(warnings, [])
+        self.assert_page_count(settled, 1)
+        self.assertNotIn("Temporary page!", settled)
+
     def test_check_works_without_aux_file(self):
         warnings, text, project = self.compile(
             r"First page.\newpage Second page.", "\\nofiles\n\\resumepagelimit{1}"
