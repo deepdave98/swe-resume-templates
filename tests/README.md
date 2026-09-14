@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks the built and published PDFs, compiles the starter ZIPs, and tests placeholder warnings. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
+`make test` builds all three templates, runs unit tests, checks PDFs and long entry headings, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -14,9 +14,14 @@ Build the PDFs first, then run from the repository root:
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tests/check_pdf_text.py
 python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
 python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
+python3 tests/check_layout.py
+python3 tests/check_page_limits.py
 ```
 
 On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
@@ -37,6 +42,20 @@ Each archive contains only the chosen template as `resume.tex`, the shared class
 
 The shipped templates intentionally contain placeholders, so their warnings are expected. Reminders do not block compilation or certify that a resume is ready. They inspect the template commands and lists, not arbitrary macros or every word in the document.
 
+## Entry layout
+
+`make test-layout` compiles long employer, university, location, and date fields on Letter and A4, including missing locations and dates. It rejects overfull boxes, missing or duplicated words, overlapping word bounds, and text outside the margins. A page-end fixture checks that a wrapped heading moves with its role.
+
+Wrapped columns can interleave in layout-mode extraction. These stress tests check word completeness and bounds, not semantic reading order. The shipped templates still use exact page snapshots. Inspect rendered pages before accepting layout changes.
+
+## Page-limit warnings
+
+`make test-page-limits` checks one- and two-page budgets, extra pages, changed budgets, and invalid inputs. Fixtures cover a first build, a shortened rebuild, reset page numbers, discarded pages, and content added at the end of a document. It also checks that enabling reminders leaves extracted text unchanged.
+
+The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
+
+Resolve LaTeX rerun warnings before checking the final length. When a last-page hook needs another run, the kernel can append a temporary page outside its shipped-page counter. A regression covers a two-page document shortened to one: the temporary page disappears on the next run and the settled count is correct.
+
 ## Change a baseline
 
 After an intentional template edit:
@@ -50,10 +69,22 @@ Do not accept a new baseline just to clear a failure. Check it against the sourc
 
 ## Check your own resume
 
-These snapshots describe the shipped templates. Your edited resume will differ. Read its extracted text instead of treating a snapshot failure as a quality score:
+The snapshots above describe the shipped templates, not your edited resume. Use the separate checker instead:
 
 ```bash
-pdftotext -layout path/to/your-resume.pdf -
+python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
 ```
 
-Check your name, email, dates, headings, bullet order, and any text split across pages. Extraction output and failure diffs can include personal data; redact them before opening an issue.
+It requires only Python 3.9+ and Poppler, not TeX or the snapshot files. Omit `--max-pages` for no page limit. For a filename starting with a dash, use `python3 scripts/check_resume.py --max-pages 1 -- -resume.pdf`.
+
+The check fails on unreadable or empty files, Poppler errors or warnings, empty text pages, replacement/private-use/control characters, and a page count above your chosen limit. Whitespace, ligatures, punctuation, and language-specific format characters are allowed. Errors name the page or character code, not the surrounding text. Exit codes: `0` passed these checks, `1` failed a check, `2` invalid command arguments.
+
+It runs locally and does not upload, print, or save extracted text. It cannot detect missing words, wrong reading order, clipping, false claims, or ATS compatibility. A pass is not a resume score. Inspect the PDF and read its text:
+
+```bash
+pdftotext -layout "path/to/your-resume.pdf" -
+```
+
+Check your name, email, dates, headings, bullet order, and text split across pages. This manual command prints personal data; redact it before opening an issue. Do the same with snapshot failure diffs, which quote template text.
+
+`make test-personal-pdf` runs the checker against all three published PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.

@@ -99,11 +99,15 @@ Leave out the optional summary if you do not need it. Pass `{}` as the location 
 \end{jobduties}
 ```
 
+Long organization names and locations wrap beside the dates. Keep dates concise; do not shrink the font to force a heading onto one line. Unbroken text can still overflow: use a short label for a link instead of printing its full URL.
+
+For A4, use `\documentclass[a4paper]{resume}`. Use `letterpaper` for US Letter. Recompile and inspect every page after changing paper size; line and page breaks can move.
+
 Write what you built, how you built it, and what changed. Experienced bullets should also show scope, tradeoffs, and operational ownership. Use only numbers you can defend.
 
 For role-specific prompts, see the [backend](examples/engineering-bullets.md#backend-engineering), [frontend](examples/engineering-bullets.md#frontend-engineering), and [data engineering](examples/engineering-bullets.md#data-engineering) examples for early-career and experienced engineers.
 
-The [community examples](examples/community/README.md) collect reviewed before-and-after bullets. No submissions have been accepted yet. Add your own through the [submission form](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml) or a pull request. Explain the edit and remove private details.
+The [community examples](examples/community/README.md) pair a real bullet with a reviewed rewrite and explain what changed. No submissions have been accepted yet. [Submit your own](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml), with private details removed. Nothing enters the index until its author approves the final wording and a reviewer completes the [checklist](examples/community/REVIEW.md). Choose a byline or Anonymous; GitHub submission history remains public.
 
 Escape LaTeX's special characters when they appear as text: `\&`, `\%`, `\$`, `\#`, and `\_`.
 
@@ -113,21 +117,47 @@ Recompile and open **View logs** in Overleaf (**Logs and output files** in the o
 
 Warnings do not change the PDF or stop compilation. They are reminders, not a final review: unmarked examples and text hidden inside custom commands can pass; literal square brackets may be flagged. Check your education, links, dates, and every claim before sending.
 
-## Check PDF Text
+## Page-Limit Reminders
+
+The one-page starters warn if your edits spill onto a second page. The experienced starter warns after two. Check **View logs** in Overleaf or your local compile log for `Page limit exceeded`.
+
+The budget is near the top of `resume.tex`:
+
+```latex
+\resumepagelimit{1}
+```
+
+Cut less relevant content first. If the extra page earns its space, change the number; remove the line to disable the reminder. The check counts pages from the current build. It never shrinks text, changes spacing, or stops compilation.
+
+If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
+
+## Check Your PDF
+
+After editing, download the PDF from Overleaf or build it locally. From the repository root:
+
+```bash
+python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
+```
+
+This checks for empty pages, extraction errors, and replacement, private-use, or control characters. Use `--max-pages 2` for a two-page limit, or omit it for no limit. It runs locally, uploads nothing, and does not print or save your resume text. The checker also works as a standalone script; it does not need the templates or test files.
+
+You need Python 3.9+ and Poppler's `pdftotext` on `PATH`: `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. On Windows, use `py -3` and add Poppler's `bin` directory to `PATH`. No pip packages.
+
+A pass is not an ATS score or a content review. The check cannot verify layout, reading order, missing words, or your claims. Inspect every page and read the extracted text:
+
+```bash
+pdftotext -layout "path/to/your-resume.pdf" -
+```
+
+That command prints personal data. Review it locally; redact it before sharing an issue.
+
+## Template Tests
 
 ```bash
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, and tests placeholder warnings against unfinished and completed examples. CI runs the same checks.
-
-Tests need Python 3.9+ and Poppler's `pdftotext` on `PATH`. Install them with `brew install python poppler` on macOS, or `sudo apt install python3 poppler-utils` on Ubuntu/Debian. No pip packages are needed.
-
-This checks Poppler's layout-mode extraction, not an ATS score. After editing your own resume, inspect its text:
-
-```bash
-pdftotext -layout path/to/your-resume.pdf -
-```
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings on Letter and A4, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
@@ -142,15 +172,15 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── downloads/                    # Current standalone starter ZIPs
 ├── examples/
 │   ├── engineering-bullets.md    # Role-specific prompts
-│   └── community/               # Submission template and reviewed index
+│   └── community/               # Submissions, review checklist, and accepted index
 ├── output/pdf/                   # Published PDFs
 ├── preview/                      # Published PNG previews
-├── scripts/                      # Rebuild and check starter downloads
+├── scripts/                      # PDF checks, starter downloads, and community records
 ├── templates/                    # Resume content
-├── tests/                        # PDF, download, and placeholder checks
+├── tests/                        # PDF, download, and compile-warning checks
 ├── CONTRIBUTING.md
 ├── Makefile
-└── resume.cls                    # Shared styling and placeholder warnings
+└── resume.cls                    # Shared styling and compile warnings
 ```
 
 ## Before Publishing Yours

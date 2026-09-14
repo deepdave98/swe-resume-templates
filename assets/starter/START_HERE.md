@@ -4,7 +4,7 @@ Edit `resume.tex`. Styling lives in `resume.cls`.
 
 1. Replace the name, contacts, links, education, and credentials with your own.
 2. Replace each example and `[placeholder]` with work you can explain. Delete sections you do not need.
-3. Compile and check the log for placeholder warnings. Replace flagged text or delete unused entries, then recompile.
+3. Compile and check the log for placeholders and extra pages. Replace flagged text or delete unused entries, then recompile.
 4. Inspect every page, then download the PDF. Warnings do not catch every unfinished example.
 
 Using the no-internship starter? Keep course projects labeled as projects and describe your own part of team work. Delete **Other Experience** if you have no work, volunteering, or club responsibility to include.
@@ -14,6 +14,12 @@ Using the no-internship starter? Keep course projects labeled as projects and de
 Use [New Project > Upload Project](https://www.overleaf.com/learn/latex/Kb/Uploading_a_project) and upload the ZIP. Set the compiler to **XeLaTeX** and the main document to `resume.tex`. Click **Recompile**.
 
 Open **View logs** beside **Recompile** to see warnings (**Logs and output files** in the older editor). The checks run inside LaTeX; nothing else to install. They look for sample contacts, known example fields, and `[prompts]` in the template's header, entries, and lists. Literal square brackets may be flagged; unmarked examples and text inside custom commands may be missed.
+
+## Page Budget
+
+`\resumepagelimit{1}` near the top of `resume.tex` warns if the current build exceeds one page; the experienced starter uses `2`. Cut less relevant content first. Change the number if the extra page is intentional, or remove the line to disable the reminder. It never changes the font, spacing, or PDF.
+
+If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
 
 ## Local
 
@@ -26,5 +32,11 @@ latexmk resume.tex
 The included `latexmkrc` selects XeLaTeX. Your output is `resume.pdf`.
 
 For literal text, escape LaTeX characters: `\&`, `\%`, `\$`, `\#`, and `\_`.
+
+## Fit your content
+
+Long organizations and locations wrap beside the dates. Keep dates short; use `{}` for a location you do not need. For links, show a short label instead of a long URL. Unbroken text can still overflow.
+
+Use `\documentclass[a4paper]{resume}` for A4 or `\documentclass[letterpaper]{resume}` for US Letter. Recompile and inspect all pages after changing paper size.
 
 [Bullet examples](https://github.com/deepdave98/swe-resume-templates/blob/main/examples/engineering-bullets.md) · [Section order](https://github.com/deepdave98/swe-resume-templates/blob/main/docs/section-order.md)

@@ -20,7 +20,7 @@ Explain why the change matters. Include before-and-after screenshots for layout 
 Submit only a bullet you wrote and have the right to share. Choose either path:
 
 - No Git required: use the [resume example issue form](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml).
-- Pull request: copy [`examples/community/TEMPLATE.md`](examples/community/TEMPLATE.md) to one new file in that directory and complete every required section.
+- Pull request: copy [`examples/community/TEMPLATE.md`](examples/community/TEMPLATE.md) into `examples/community/accepted/`, complete the content and permissions, and open a draft PR. Leave the review record for the reviewer.
 
 Before submitting:
 
@@ -29,4 +29,6 @@ Before submitting:
 - Explain numbers in safe, non-confidential terms. Never invent a metric or upload private proof.
 - Confirm that the original is yours and that your submission may be published under the MIT License.
 
-Attribution is optional. Accepted examples use one file each and are added to the [reviewed index](examples/community/README.md).
+Approve the final rewrite and byline before publication. Attribution is optional, but selecting Anonymous does not hide your GitHub account or history. The [review checklist](examples/community/REVIEW.md) covers claim checks, approval, and publication. Only accepted examples enter the [index](examples/community/README.md).
+
+Run `python3 scripts/check_community_examples.py` after completing an entry and its index row. The check also runs in CI; it checks the record, not whether a claim is true.

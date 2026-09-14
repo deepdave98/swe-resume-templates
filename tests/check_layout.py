@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Compile realistic entry lengths and check text bounds on Letter and A4."""
+
+from collections import Counter
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+import xml.etree.ElementTree as ET
+
+import check_pdf_text
+
+
+ROOT = Path(__file__).resolve().parents[1]
+CASES = (
+    ("Short employer", "Northstar", "Toronto", "2022 -- Present"),
+    ("Long university", "Northern Institute of Computer Science and Applied Engineering", "Vancouver, British Columbia", "September 2019 -- December 2023"),
+    ("Long employer", "Regional Transportation Software and Infrastructure Cooperative", "San Francisco Bay Area, California", "January 2022 -- Present"),
+    ("No location", "Open Source Developer Tools and Distributed Systems Project", "", "2023 -- Present"),
+    ("Long dates", "Northstar Infrastructure", "Toronto", "September 2019 -- December 2021; January 2023 -- Present"),
+    ("Both columns wrap", "Regional Transportation Software and Infrastructure Cooperative", "San Francisco Bay Area, California", "September 2019 -- December 2021; January 2023 -- Present"),
+    ("No dates", "Northern Institute of Computer Science and Applied Engineering", "Vancouver, British Columbia", ""),
+    ("No dates with wrapping", "Northern Institute of Computer Science and Applied Engineering Research and Development Cooperative", "Vancouver, British Columbia", ""),
+)
+
+
+def document(body, paper):
+    return "\\documentclass[" + paper + "]{resume}\n\\begin{document}\n" + body + "\n\\end{document}\n"
+
+
+class EntryLayoutTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(prefix="resume-layout-")
+        self.root = Path(self.temporary.name)
+        self.count = 0
+
+    def tearDown(self):
+        self.temporary.cleanup()
+
+    def compile(self, body, paper):
+        self.count += 1
+        project = self.root / f"fixture {self.count}"
+        project.mkdir()
+        shutil.copyfile(ROOT / "resume.cls", project / "resume.cls")
+        (project / "resume.tex").write_text(document(body, paper), encoding="utf-8")
+        result = subprocess.run(
+            [shutil.which("xelatex"), "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", "resume.tex"],
+            cwd=project, capture_output=True, encoding="utf-8", errors="replace", timeout=120,
+        )
+        self.assertEqual(result.returncode, 0, "\n".join(result.stdout.splitlines()[-35:]))
+        log = (project / "resume.log").read_text(encoding="utf-8", errors="replace")
+        self.assertNotIn("Overfull ", log)
+        pdf = project / "resume.pdf"
+        text = check_pdf_text.extract_text(pdf)
+        bounds = subprocess.run(
+            [shutil.which("pdftotext"), "-bbox", str(pdf), "-"],
+            check=True, capture_output=True, encoding="utf-8", timeout=30,
+        )
+        return text, ET.fromstring(bounds.stdout)
+
+    def assert_inside_margins(self, tree):
+        for page in tree.findall(".//{*}page"):
+            width, height = float(page.attrib["width"]), float(page.attrib["height"])
+            words = page.findall(".//{*}word")
+            self.assertTrue(words)
+            for word in words:
+                self.assertGreaterEqual(float(word.attrib["xMin"]), 35.5, word.text)
+                self.assertLessEqual(float(word.attrib["xMax"]), width - 35.5, word.text)
+                self.assertGreaterEqual(float(word.attrib["yMin"]), 35.5, word.text)
+                self.assertLessEqual(float(word.attrib["yMax"]), height - 35.5, word.text)
+            for index, word in enumerate(words):
+                for other in words[index + 1:]:
+                    x_overlap = min(float(word.attrib["xMax"]), float(other.attrib["xMax"])) - max(float(word.attrib["xMin"]), float(other.attrib["xMin"]))
+                    y_overlap = min(float(word.attrib["yMax"]), float(other.attrib["yMax"])) - max(float(word.attrib["yMin"]), float(other.attrib["yMin"]))
+                    self.assertFalse(x_overlap > 0.5 and y_overlap > 0.5, (word.text, other.text))
+
+    def test_entry_lengths_on_both_paper_sizes(self):
+        for paper in ("letterpaper", "a4paper"):
+            for role, organization, location, dates in CASES:
+                with self.subTest(paper=paper, role=role):
+                    body = "\\jobentry{" + role + "}{" + organization + "}{" + location + "}{" + dates + "}"
+                    text, tree = self.compile(body, paper)
+                    self.assertEqual(len(check_pdf_text.split_pages(text)), 1)
+                    # Layout extraction may interleave wrapped columns. Require
+                    # every word exactly once; visual bounds are checked separately.
+                    expected = " ".join((organization, "--" if location else "", location, dates, role)).replace("--", "–")
+                    self.assertEqual(Counter(check_pdf_text.words(text)), Counter(check_pdf_text.words(expected)))
+                    self.assertTrue(text.strip().endswith(role), text)
+                    self.assert_inside_margins(tree)
+                    if dates:
+                        # Font sizes differ, but the first company/date lines
+                        # must start together, not one text line apart.
+                        pdf_words = tree.findall(".//{*}word")
+                        organization_word = next(word for word in pdf_words if word.text == organization.split()[0])
+                        date_word = next(word for word in pdf_words if word.text == dates.split()[0])
+                        self.assertLess(abs(float(organization_word.attrib["yMin"]) - float(date_word.attrib["yMin"])), 2)
+
+    def test_heading_and_role_move_together_near_page_end(self):
+        for paper, remaining in (("letterpaper", "9.3in"), ("a4paper", "10in")):
+            with self.subTest(paper=paper):
+                body = r"First page marker\par\vspace*{" + remaining + r"}" + "\n" + r"""
+\jobentry{Platform engineer}{Regional Transportation Software and Infrastructure Cooperative}{San Francisco Bay Area, California}{January 2022 -- Present}
+\begin{jobduties}
+\item Maintained the deployment service.
+\end{jobduties}
+"""
+                text, tree = self.compile(body, paper)
+                pages = check_pdf_text.split_pages(text)
+                self.assertEqual(len(pages), 2)
+                self.assertNotIn("Cooperative", pages[0])
+                self.assertIn("Cooperative", pages[1])
+                self.assertIn("Platform engineer", pages[1])
+                self.assert_inside_margins(tree)
+
+
+def main():
+    missing = [name for name in ("xelatex", "pdftotext") if shutil.which(name) is None]
+    if missing:
+        print("FAIL: missing " + ", ".join(missing) + ". Install XeLaTeX and Poppler and add them to PATH.", file=sys.stderr)
+        return 1
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(EntryLayoutTests)
+    return 0 if unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful() else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
