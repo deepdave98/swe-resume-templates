@@ -107,7 +107,7 @@ Write what you built, how you built it, and what changed. Experienced bullets sh
 
 For role-specific prompts, see the [backend](examples/engineering-bullets.md#backend-engineering), [frontend](examples/engineering-bullets.md#frontend-engineering), and [data engineering](examples/engineering-bullets.md#data-engineering) examples for early-career and experienced engineers.
 
-The [community examples](examples/community/README.md) collect reviewed before-and-after bullets. No submissions have been accepted yet. Add your own through the [submission form](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml) or a pull request. Explain the edit and remove private details.
+The [community examples](examples/community/README.md) pair a real bullet with a reviewed rewrite and explain what changed. No submissions have been accepted yet. [Submit your own](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml), with private details removed. Nothing enters the index until its author approves the final wording and a reviewer completes the [checklist](examples/community/REVIEW.md). Choose a byline or Anonymous; GitHub submission history remains public.
 
 Escape LaTeX's special characters when they appear as text: `\&`, `\%`, `\$`, `\#`, and `\_`.
 
@@ -157,7 +157,7 @@ That command prints personal data. Review it locally; redact it before sharing a
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings on Letter and A4, and runs the personal PDF checker. CI runs the same checks.
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings on Letter and A4, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
@@ -172,10 +172,10 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── downloads/                    # Current standalone starter ZIPs
 ├── examples/
 │   ├── engineering-bullets.md    # Role-specific prompts
-│   └── community/               # Submission template and reviewed index
+│   └── community/               # Submissions, review checklist, and accepted index
 ├── output/pdf/                   # Published PDFs
 ├── preview/                      # Published PNG previews
-├── scripts/                      # Check your PDF and package starter downloads
+├── scripts/                      # PDF checks, starter downloads, and community records
 ├── templates/                    # Resume content
 ├── tests/                        # PDF, download, and compile-warning checks
 ├── CONTRIBUTING.md

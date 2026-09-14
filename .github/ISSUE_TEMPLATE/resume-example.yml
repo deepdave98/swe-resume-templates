@@ -7,7 +7,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        This issue is public. Use placeholders such as `[COMPANY]`, `[PRODUCT]`, and `[TEAM]`. Do not attach private resumes, screenshots, logs, dashboards, customer data, or confidential evidence.
+        This issue and its history are public. Remove names, contacts, private URLs, and identifying incident details before posting. Use placeholders such as `[COMPANY]`, `[PRODUCT]`, and `[TEAM]`. Do not attach resumes, screenshots, logs, dashboards, customer data, or confidential evidence.
+
+        A reviewer may suggest edits. You will approve the final wording and byline before the example is accepted. Submission is not acceptance or a claim that the bullet led to a hire.
 
   - type: dropdown
     id: discipline
@@ -69,8 +71,8 @@ body:
   - type: textarea
     id: evidence
     attributes:
-      label: Evidence verification
-      description: Describe what shipped, passed, reconciled, or was adopted and how you checked it. For a metric, give the details that apply, such as unit, scope, time window, safe measurement method, and a baseline for comparisons. "No number" is valid. Do not upload private proof.
+      label: Context and checks
+      description: Describe what shipped, passed, reconciled, or was adopted and how you checked it. Say whether this was production, a local benchmark, a test, or another setting. For a number, give its unit, scope, time window, method, and comparison baseline where applicable. "No number" is valid. Do not upload private proof.
     validations:
       required: true
 
@@ -86,7 +88,7 @@ body:
     id: attribution
     attributes:
       label: Optional attribution
-      description: Add the name or GitHub handle to show in the published example. Leave blank for Anonymous.
+      description: Add the name or GitHub handle to show in the published example. Leave blank for Anonymous. Your GitHub account and this submission history remain public either way.
 
   - type: checkboxes
     id: permission
