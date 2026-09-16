@@ -10,7 +10,7 @@ import check_page_limits as checker
 
 class PageLimitCheckerTests(unittest.TestCase):
     def test_starters_declare_expected_budgets(self):
-        for name, pages in (("no-internship", 1), ("new-grad", 1), ("experienced", 2)):
+        for name, pages in (("no-internship", 1), ("new-grad", 1), ("experienced-one-page", 1), ("experienced", 2)):
             with self.subTest(starter=name):
                 source = (checker.ROOT / "templates" / f"{name}-resume.tex").read_text(encoding="utf-8")
                 preamble = source.split(r"\begin{document}", 1)[0]

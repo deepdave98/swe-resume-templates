@@ -24,7 +24,8 @@ body:
       options:
         - No Internship template
         - New Grad template
-        - Experienced template
+        - Experienced (1 page) template
+        - Experienced (2 pages) template
         - Multiple templates
         - Repository or documentation
     validations:

@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks PDFs, headings, grouped roles, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
+`make test` builds all four templates, runs unit tests, checks PDFs, headings, grouped roles, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -13,9 +13,10 @@ Build the PDFs first, then run from the repository root:
 ```bash
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tests/check_pdf_text.py
-python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced-one-page output/pdf/experienced-one-page-resume.pdf --experienced output/pdf/experienced-resume.pdf
 python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
 python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/experienced-one-page-resume.pdf --max-pages 1
 python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
 python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
@@ -26,11 +27,11 @@ python3 tests/check_page_limits.py
 python3 tests/check_contacts.py
 ```
 
-On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
+On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, `--experienced-one-page`, and `--experienced` to the PDF checker for other locations.
 
 ## Starter downloads
 
-Run `make downloads` to rebuild all three ZIPs in `downloads/`. Without make, run `python3 scripts/package_templates.py`.
+Run `make downloads` to rebuild all four ZIPs in `downloads/`. Without make, run `python3 scripts/package_templates.py`.
 
 Each archive contains only the chosen template as `resume.tex`, the shared class, compiler config, start guide, and license. Text is UTF-8 with LF line endings. Fixed ZIP metadata keeps builds identical across checkouts.
 
@@ -60,7 +61,7 @@ Short headings must extract in order; wrapped headings must retain every word. A
 
 `make test-page-limits` checks one- and two-page budgets, extra pages, changed budgets, and invalid inputs. Fixtures cover a first build, a shortened rebuild, reset page numbers, discarded pages, and content added at the end of a document. It also checks that enabling reminders leaves extracted text unchanged.
 
-The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
+The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. All starters set a one-page budget except the two-page experienced version.
 
 Resolve LaTeX rerun warnings before checking the final length. When a last-page hook needs another run, the kernel can append a temporary page outside its shipped-page counter. A regression covers a two-page document shortened to one: the temporary page disappears on the next run and the settled count is correct.
 
@@ -72,7 +73,7 @@ Resolve LaTeX rerun warnings before checking the final length. When a last-page 
 
 After an intentional template edit:
 
-1. Run `make preview` and inspect all four pages.
+1. Run `make preview` and inspect all five pages.
 2. Read the extracted text with `pdftotext -layout path/to/resume.pdf -`.
 3. Update the affected page in `expected/` with the reviewed text, without the trailing form feed. Keep dates on the same line as the organization, as layout mode emits them.
 4. Run `make downloads`, then `make test`. Commit the source, refreshed previews/PDFs, ZIPs, and baseline together.
@@ -99,4 +100,4 @@ pdftotext -layout "path/to/your-resume.pdf" -
 
 Check your name, email, dates, headings, bullet order, and text split across pages. This manual command prints personal data; redact it before opening an issue. Do the same with snapshot failure diffs, which quote template text.
 
-`make test-personal-pdf` runs the checker against all three published PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.
+`make test-personal-pdf` runs the checker against all four published PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.
