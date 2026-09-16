@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks PDFs and long entry headings, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` on `PATH`; no pip packages.
+`make test` builds all three templates, runs unit tests, checks PDFs, headings, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -22,6 +22,7 @@ python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
 python3 tests/check_layout.py
 python3 tests/check_page_limits.py
+python3 tests/check_contacts.py
 ```
 
 On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
@@ -55,6 +56,10 @@ Wrapped columns can interleave in layout-mode extraction. These stress tests che
 The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
 
 Resolve LaTeX rerun warnings before checking the final length. When a last-page hook needs another run, the kernel can append a temporary page outside its shipped-page counter. A regression covers a two-page document shortened to one: the temporary page disappears on the next run and the settled count is correct.
+
+## Contact links
+
+`make test-contacts` compiles email and phone examples, then checks their visible text with `pdftotext` and actual link destinations with `pdfinfo -url`. Both tools come with Poppler. Tests cover edited values, email punctuation, phone formatting, placeholder reminders, and unsupported inputs. These checks do not verify that an inbox or phone number belongs to you; click your final PDF's links too.
 
 ## Change a baseline
 

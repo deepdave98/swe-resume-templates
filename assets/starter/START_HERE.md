@@ -9,6 +9,12 @@ Edit `resume.tex`. Styling lives in `resume.cls`.
 
 Using the no-internship starter? Keep course projects labeled as projects and describe your own part of team work. Delete **Other Experience** if you have no work, volunteering, or club responsibility to include.
 
+## Contacts
+
+Edit the values in `\resumeemail{alex_morgan+jobs@example.com}` and `\resumephone{+1 (416) 555-0123}` once. They supply both the visible text and the link. Use a literal email and include `+` with your phone's country code. Phone spaces, parentheses, hyphens, and periods stay visible but are removed from the `tel:` link.
+
+Unsupported formats warn and print without a link. Use `\resumelink{destination}{label}` for other formats or labels; check both values. To remove a contact, delete its preceding `\contactsep` too. Click the links in your downloaded PDF before sending.
+
 ## Overleaf
 
 Use [New Project > Upload Project](https://www.overleaf.com/learn/latex/Kb/Uploading_a_project) and upload the ZIP. Set the compiler to **XeLaTeX** and the main document to `resume.tex`. Click **Recompile**.

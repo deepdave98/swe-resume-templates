@@ -85,6 +85,21 @@ PNG previews require Poppler or ImageMagick. Edit shared styling in `resume.cls`
 
 ## Edit the Content
 
+### Contacts
+
+Edit your email and phone once. Each command uses the same value for the visible text and clickable link:
+
+```latex
+\resumephone{+1 (416) 555-0123}
+\resumeemail{alex_morgan+jobs@example.com}
+```
+
+Keep these inside `\resumecontact`. Use a literal email address; underscores, plus signs, and hyphens work. Phone numbers need `+`, the country code, and 7 to 15 digits total. Spaces, parentheses, hyphens, and periods are removed from the link, not the displayed number. No country code is guessed.
+
+Unsupported formats warn and print without a link. For an extension, custom email syntax, or a different label, use `\resumelink{destination}{label}` and check both values. Remove a contact with its preceding `\contactsep` if you do not want it shown. Click every link in the downloaded PDF before sending.
+
+### Entries
+
 Entries use this format:
 
 ```latex
@@ -157,7 +172,7 @@ That command prints personal data. Review it locally; redact it before sharing a
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings on Letter and A4, runs the personal PDF checker, and validates community review records. CI runs the same checks.
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks headings and contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
