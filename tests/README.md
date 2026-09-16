@@ -1,6 +1,6 @@
 # Template Checks
 
-`make test` builds all three templates, runs unit tests, checks PDFs, headings, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
+`make test` builds all three templates, runs unit tests, checks PDFs, headings, grouped roles, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -21,6 +21,7 @@ python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
 python3 tests/check_layout.py
+python3 tests/check_roles.py
 python3 tests/check_page_limits.py
 python3 tests/check_contacts.py
 ```
@@ -48,6 +49,12 @@ The shipped templates intentionally contain placeholders, so their warnings are 
 `make test-layout` compiles long employer, university, location, and date fields on Letter and A4, including missing locations and dates. It rejects overfull boxes, missing or duplicated words, overlapping word bounds, and text outside the margins. A page-end fixture checks that a wrapped heading moves with its role.
 
 Wrapped columns can interleave in layout-mode extraction. These stress tests check word completeness and bounds, not semantic reading order. The shipped templates still use exact page snapshots. Inspect rendered pages before accepting layout changes.
+
+## Multiple roles
+
+`make test-roles` compiles same-company role groups on Letter and A4. It checks role-specific dates, bullets, optional summaries, long titles, empty fields, and placeholder warnings. Page-break fixtures verify that the company and location repeat after explicit or automatic breaks, even when page numbers reset. Other checks cover a changed employer and a role with no preceding employer.
+
+Short headings must extract in order; wrapped headings must retain every word. All word bounds must stay inside the margins without overlap. The copy-paste example in `docs/multiple-roles.md` is compiled too.
 
 ## Page-limit warnings
 

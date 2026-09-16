@@ -225,16 +225,23 @@
 \newsavebox{\resumeorganizationbox}
 \newsavebox{\resumedatesbox}
 \newsavebox{\resumeheadingbox}
+\newsavebox{\resumesummarybox}
+\newsavebox{\resumerolebox}
 \newlength{\resumedateswidth}
 \newlength{\resumeorganizationwidth}
 \newlength{\resumeentryspace}
+\newlength{\resumesummaryspace}
+\newif\ifresumehasemployer
+\newcount\resumeemployerpage
+\newcommand{\resumelastorganization}{}
+\newcommand{\resumelastlocation}{}
 
 % Keep the original single-line layout when it fits. Otherwise, wrap the
 % organization/location beside dates. Dates use at most 40% of the line;
 % a 1em gap separates the columns. No font sizes or margins are reduced.
-\newcommand{\resumeentryheading}[3]{%
-  \sbox{\resumeorganizationbox}{\color{namecolor}\textbf{#1}\ifblank{#2}{}{\space--\space#2}}%
-  \sbox{\resumedatesbox}{\small\textbf{\color{namecolor}#3}}%
+\newcommand{\resumeprepareheading}[2]{%
+  \sbox{\resumeorganizationbox}{#1}%
+  \sbox{\resumedatesbox}{\small\textbf{\color{namecolor}#2}}%
   \ifdim\dimexpr\wd\resumeorganizationbox+\wd\resumedatesbox+2\tabcolsep\relax>\linewidth
     \setlength{\resumedateswidth}{\wd\resumedatesbox}%
     \ifdim\resumedateswidth>0.4\linewidth
@@ -243,8 +250,8 @@
     \setlength{\resumeorganizationwidth}{\dimexpr\linewidth-\resumedateswidth-1em\relax}%
     \sbox{\resumeheadingbox}{%
       \begin{tabular}{@{}p{\resumeorganizationwidth}@{\hspace{1em}}p{\resumedateswidth}@{}}
-        \raggedright\leavevmode{\color{namecolor}\textbf{#1}\ifblank{#2}{}{\space--\space#2}} &
-        \raggedleft\small\leavevmode\textbf{\color{namecolor}#3}\tabularnewline
+        \raggedright\leavevmode{#1} &
+        \raggedleft\small\leavevmode\textbf{\color{namecolor}#2}\tabularnewline
       \end{tabular}%
     }%
   \else
@@ -259,30 +266,99 @@
   \ifdim\resumeentryspace<5\baselineskip
     \setlength{\resumeentryspace}{5\baselineskip}%
   \fi
+}
+
+\newcommand{\resumeprepareentryheading}[3]{%
+  \resumeprepareheading{\color{namecolor}\textbf{#1}\ifblank{#2}{}{\space--\space#2}}{#3}%
+}
+
+\newcommand{\resumeentryheading}[3]{%
+  \resumeprepareentryheading{#1}{#2}{#3}%
   \Needspace{\resumeentryspace}%
   \vspace{8pt}%
   \noindent\usebox{\resumeheadingbox}\par\nopagebreak%
+}
+
+% Shared entry setup keeps each role's warnings and bullet spacing independent.
+\newcommand{\resumebeginentry}[3]{%
+  \stepcounter{resumeentry}%
+  \resumecheckfield{entry \arabic{resumeentry} summary}{summary}{#1}%
+  \resumecheckfield{entry \arabic{resumeentry} role}{role}{#2}%
+  \resumecheckfield{entry \arabic{resumeentry} dates}{dates}{#3}%
+  \ifblank{#1}{\setlength{\jobdutiesvspace}{3pt}}{\setlength{\jobdutiesvspace}{5pt}}%
+}
+
+\newcommand{\resumeentrysummary}[1]{%
+  \ifblank{#1}{}{%
+    \vspace{4pt}%
+    {\small\itshape\color{namecolor}#1\/}\par\nopagebreak%
+  }%
+  \par\nopagebreak%
 }
 
 % \jobentry[Optional summary]{Title}{Company}{Location}{Dates}
 % Pass {} for Location to omit it.
 % The gap before jobduties is 5pt with a summary and 3pt without.
 \newcommand{\jobentry}[5][]{%
-  \stepcounter{resumeentry}%
-  \resumecheckfield{entry \arabic{resumeentry} summary}{summary}{#1}%
-  \resumecheckfield{entry \arabic{resumeentry} role}{role}{#2}%
+  \resumebeginentry{#1}{#2}{#5}%
   \resumecheckfield{entry \arabic{resumeentry} organization}{organization}{#3}%
   \resumecheckfield{entry \arabic{resumeentry} location}{location}{#4}%
-  \resumecheckfield{entry \arabic{resumeentry} dates}{dates}{#5}%
-  \ifblank{#1}{\setlength{\jobdutiesvspace}{3pt}}{\setlength{\jobdutiesvspace}{5pt}}%
+  \def\resumelastorganization{#3}%
+  \def\resumelastlocation{#4}%
+  \resumehasemployertrue%
   \resumeentryheading{#3}{#4}{#5}%
+  \resumeemployerpage=\ReadonlyShipoutCounter\relax%
   \vspace{1pt}%
   {\color{namecolor}\textit{#2}}\par\nopagebreak%
+  \resumeentrysummary{#1}%
+}
+
+% Another role at the preceding employer; dates belong to this role alone.
+% Reuse jobentry for a different employer, location, or a new section.
+% If this heading starts on another page, repeat the employer for context.
+% The shipped-page count handles explicit breaks and page-number resets.
+\newcommand{\roleentry}[3][]{%
+  \resumebeginentry{#1}{#2}{#3}%
+  \resumeprepareheading{\color{namecolor}\textit{#2}}{#3}%
+  % Include a multi-line summary before deciding whether the role will fit.
+  \setlength{\resumesummaryspace}{0pt}%
   \ifblank{#1}{}{%
-    \vspace{4pt}%
-    {\small\itshape\color{namecolor}#1\/}\par\nopagebreak%
+    \sbox{\resumesummarybox}{\parbox{\linewidth}{\small\itshape#1\/\par}}%
+    \setlength{\resumesummaryspace}{\dimexpr\ht\resumesummarybox+\dp\resumesummarybox+4pt\relax}%
   }%
-  \par\nopagebreak%
+  \addtolength{\resumeentryspace}{\resumesummaryspace}%
+  \Needspace{\resumeentryspace}%
+  \ifresumehasemployer%
+    \ifnum\resumeemployerpage=\ReadonlyShipoutCounter\relax%
+      \vspace{8pt}%
+      \noindent\usebox{\resumeheadingbox}\par\nopagebreak%
+    \else%
+      \expandafter\ifblank\expandafter{\resumelastlocation}{%
+        \resumeprepareentryheading{\resumelastorganization}{}{#3}%
+      }{%
+        \resumeprepareentryheading{\resumelastorganization}{\resumelastlocation}{#3}%
+      }%
+      % The repeated employer may itself wrap. Keep its full height, the
+      % role, summary, and the start of the first bullet on this page.
+      \sbox{\resumerolebox}{\parbox{\linewidth}{\color{namecolor}\textit{#2}\par}}%
+      \setlength{\resumeentryspace}{\dimexpr
+        \ht\resumeheadingbox+\dp\resumeheadingbox+
+        \ht\resumerolebox+\dp\resumerolebox+\resumesummaryspace+
+        8pt+1pt+\jobdutiesvspace+2pt+3\baselineskip\relax}%
+      \Needspace{\resumeentryspace}%
+      \vspace{8pt}%
+      \noindent\usebox{\resumeheadingbox}\par\nopagebreak%
+      \resumeemployerpage=\ReadonlyShipoutCounter\relax%
+      \vspace{1pt}%
+      {\color{namecolor}\textit{#2}}\par\nopagebreak%
+    \fi%
+  \else%
+    \ClassWarning{resume}{Role entry has no employer.\MessageBreak
+      Start the group with \string\jobentry\space before using \string\roleentry}%
+    \vspace{8pt}%
+    \noindent\usebox{\resumeheadingbox}\par\nopagebreak%
+  \fi%
+  \resumeentrysummary{#1}%
 }
 
 % Entry bullets: adjust line spacing, marker, indentation, and list spacing here.

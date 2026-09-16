@@ -43,6 +43,8 @@ For literal text, escape LaTeX characters: `\&`, `\%`, `\$`, `\#`, and `\_`.
 
 Long organizations and locations wrap beside the dates. Keep dates short; use `{}` for a location you do not need. For links, show a short label instead of a long URL. Unbroken text can still overflow.
 
+For earlier roles at the same company and location, add `\roleentry{Earlier title}{That role's dates}` after the first entry's bullets, then give it a separate `jobduties` list. Each role needs its own dates. The employer repeats when a role starts on another page. Use `\jobentry` for a different employer, location, or section. [Copy-paste example](https://github.com/deepdave98/swe-resume-templates/blob/main/docs/multiple-roles.md).
+
 Use `\documentclass[a4paper]{resume}` for A4 or `\documentclass[letterpaper]{resume}` for US Letter. Recompile and inspect all pages after changing paper size.
 
 [Bullet examples](https://github.com/deepdave98/swe-resume-templates/blob/main/examples/engineering-bullets.md) · [Section order](https://github.com/deepdave98/swe-resume-templates/blob/main/docs/section-order.md)

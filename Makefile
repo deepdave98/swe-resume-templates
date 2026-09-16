@@ -1,4 +1,4 @@
-.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts clean
+.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-roles test-page-limits test-contacts clean
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -29,7 +29,7 @@ experienced:
 downloads:
 	$(PYTHON) scripts/package_templates.py
 
-test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts
+test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-roles test-page-limits test-contacts
 
 test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
@@ -54,6 +54,9 @@ test-placeholders:
 
 test-layout:
 	$(PYTHON) tests/check_layout.py
+
+test-roles:
+	$(PYTHON) tests/check_roles.py
 
 test-page-limits:
 	$(PYTHON) tests/check_page_limits.py
