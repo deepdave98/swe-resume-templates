@@ -48,6 +48,67 @@
 % Link styling: replace \uline{#2} with #2 to remove underlining.
 \newcommand{\resumelink}[2]{\href{#1}{\uline{#2}}}
 
+% Edit-once contact links. Email display and mailto target use the same value.
+% Phone display keeps its formatting; tel removes spaces, parentheses, dots,
+% and hyphens. Supply +countrycode and 7--15 digits; extensions are not parsed.
+% These helpers accept literal text, not custom commands. Email also accepts
+% \_ for an underscore. For other formats, use \resumelink{target}{label}.
+% Unsupported input is printed without a link and warned about, never guessed.
+\ExplSyntaxOn
+\tl_new:N \l__resume_contact_tl
+\tl_new:N \l__resume_contact_target_tl
+\cs_new_protected:Npn \__resume_contact_plain:n #1
+  {
+    \ClassWarning{resume}{Unsupported~#1~format;~contact~is~not~linked.\MessageBreak
+      Check~the~contact~helper~instructions~or~use~
+      \string\resumelink\space with~an~explicit~target~and~label}
+    \tl_use:N \l__resume_contact_tl
+  }
+\NewDocumentCommand{\resumeemail}{m}
+  {
+    \group_begin:
+    % Stringify before inspecting or printing: raw _ remains ordinary text,
+    % and commands supplied as values cannot execute during these checks.
+    \tl_set:Nx \l__resume_contact_tl { \tl_to_str:n {#1} }
+    \tl_trim_spaces:N \l__resume_contact_tl
+    \regex_replace_all:nnN { \\ _ } { _ } \l__resume_contact_tl
+    % The replacement underscore inherits its source catcode; make it text.
+    \tl_set:Nx \l__resume_contact_tl { \tl_to_str:V \l__resume_contact_tl }
+    \exp_args:NnV \regex_match:nnTF
+      {
+        \A [A-Za-z0-9_+\-]+ ( \. [A-Za-z0-9_+\-]+ )* @
+        [A-Za-z0-9] ( [A-Za-z0-9\-]* [A-Za-z0-9] )?
+        ( \. [A-Za-z0-9] ( [A-Za-z0-9\-]* [A-Za-z0-9] )? )+ \Z
+      }
+      \l__resume_contact_tl
+      {
+        \tl_set:Nx \l__resume_contact_target_tl
+          { \tl_to_str:n {mailto:}\exp_not:V \l__resume_contact_tl }
+        \exp_args:NVV \resumelink \l__resume_contact_target_tl \l__resume_contact_tl
+      }
+      { \__resume_contact_plain:n {email} }
+    \group_end:
+  }
+\NewDocumentCommand{\resumephone}{m}
+  {
+    \group_begin:
+    \tl_set:Nx \l__resume_contact_tl { \tl_to_str:n {#1} }
+    \tl_trim_spaces:N \l__resume_contact_tl
+    \tl_set_eq:NN \l__resume_contact_target_tl \l__resume_contact_tl
+    \regex_replace_all:nnN { [\s().\-] } { } \l__resume_contact_target_tl
+    \exp_args:NnV \regex_match:nnTF { \A \+ [1-9][0-9]{6,14} \Z }
+      \l__resume_contact_target_tl
+      {
+        % hyperref needs the colon to be an ordinary character, not an
+        % expl3 letter, or it treats the URI as a file destination.
+        \tl_put_left:Nx \l__resume_contact_target_tl { \tl_to_str:n {tel:} }
+        \exp_args:NVV \resumelink \l__resume_contact_target_tl \l__resume_contact_tl
+      }
+      { \__resume_contact_plain:n {phone} }
+    \group_end:
+  }
+\ExplSyntaxOff
+
 % Automatic reminders for the template's sample values and [bracketed prompts].
 % Inspect only content passed to the resume commands below, without expanding
 % user macros or printing their values in the log. TeX has already removed comments.
@@ -75,8 +136,9 @@
         {name}{ \__resume_match:n { \A \s* Your \s+ Name \s* \Z } }
         {contact}{
           \__resume_match:n
-            { hello@example\.com | your-handle | tel:\+15555555555 |
-              \+1 \s* \(555\) \s* 555-5555 | City,? \s+ Region }
+            { hello@example\.com | your-handle |
+              \+1 [\s().\-]* 555 [\s().\-]* 555 [\s().\-]* 5555 |
+              City,? \s+ Region }
         }
         {role}{ \__resume_match:n { \A \s* Issuing \s+ Organization \s* \Z } }
         {organization}{
