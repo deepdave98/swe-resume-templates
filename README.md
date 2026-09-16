@@ -25,6 +25,14 @@ Each ZIP contains `resume.tex`, `resume.cls`, `latexmkrc`, `START_HERE.md`, and 
 
 New grads usually lead with education; experienced engineers lead with relevant work. Read [why section order changes](docs/section-order.md), including when to move projects up, drop certifications, or use a second page.
 
+## Tailor Without Duplicating
+
+Applying to different kinds of roles? The optional [shared-content example](examples/application-versions/README.md) keeps contacts, education, titles, dates, and bullet text in one place. Three short files choose the bullets for backend, frontend, and infrastructure applications. Fix a shared fact once, then recompile each version.
+
+[Open all three in one Overleaf project](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fapplication-versions.zip&engine=xelatex&main_document=backend.tex) · [Download ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/application-versions.zip) · PDFs: [backend](output/pdf/application-backend.pdf), [frontend](output/pdf/application-frontend.pdf), [infrastructure](output/pdf/application-infrastructure.pdf)
+
+Same style, ordinary LaTeX, no generator. The regular templates do not change. Send the selected PDF, not the source ZIP: the ZIP includes unselected work too.
+
 ## Previews
 
 ### No Internship
@@ -174,6 +182,8 @@ make test
 
 This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks headings and contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
+The shared-content example has its own checks: all three versions compile, shared edits propagate, and unselected bullets stay out of the PDF. Run just those with `make test-application-versions`. Use `make preview-application-versions` to refresh its PDFs and previews, and `make application-download` to rebuild its ZIP.
+
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
 ## Project Structure
@@ -186,6 +196,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── docs/section-order.md         # What to put first, and why
 ├── downloads/                    # Current standalone starter ZIPs
 ├── examples/
+│   ├── application-versions/     # Shared facts, different bullet selections
 │   ├── engineering-bullets.md    # Role-specific prompts
 │   └── community/               # Submissions, review checklist, and accepted index
 ├── output/pdf/                   # Published PDFs
