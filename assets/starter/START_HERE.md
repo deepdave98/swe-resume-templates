@@ -9,6 +9,8 @@ Edit `resume.tex`. Styling lives in `resume.cls`.
 
 Using the no-internship starter? Keep course projects labeled as projects and describe your own part of team work. Delete **Other Experience** if you have no work, volunteering, or club responsibility to include.
 
+Using an experienced starter? Keep relevant roles in reverse chronological order. The one-page version starts with two roles, skills, and a degree; use your actual history. Add projects or certifications only when they contribute evidence your jobs do not cover.
+
 ## Contacts
 
 Edit the values in `\resumeemail{alex_morgan+jobs@example.com}` and `\resumephone{+1 (416) 555-0123}` once. They supply both the visible text and the link. Use a literal email and include `+` with your phone's country code. Phone spaces, parentheses, hyphens, and periods stay visible but are removed from the `tel:` link.
@@ -23,7 +25,7 @@ Open **View logs** beside **Recompile** to see warnings (**Logs and output files
 
 ## Page Budget
 
-`\resumepagelimit{1}` near the top of `resume.tex` warns if the current build exceeds one page; the experienced starter uses `2`. Cut less relevant content first. Change the number if the extra page is intentional, or remove the line to disable the reminder. It never changes the font, spacing, or PDF.
+`\resumepagelimit{1}` near the top of `resume.tex` warns if the current build exceeds one page; the two-page experienced starter uses `2`. Cut less relevant content first. Change the number if the extra page is intentional, or remove the line to disable the reminder. It never changes the font, spacing, or PDF.
 
 If LaTeX asks you to rerun, recompile before checking length. Its temporary rerun pages are not counted by this reminder.
 

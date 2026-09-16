@@ -5,7 +5,7 @@ Issues and pull requests are welcome. Keep changes focused.
 ## Template and documentation changes
 
 - Keep shared layout and styling in `resume.cls`.
-- Keep the no-internship and new-grad templates at one page each, and the experienced template at two pages.
+- Keep no-internship, new-grad, and experienced-one-page at one page each. Keep experienced at two pages.
 - Keep examples shipped in the resume templates and maintainer-written guides fictional: use placeholder companies, roles, metrics, links, and contact details.
 - Run `make` with XeLaTeX.
 - Run `make preview` and review every page if the output changes.

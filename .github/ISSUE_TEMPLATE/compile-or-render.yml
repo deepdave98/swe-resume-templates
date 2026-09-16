@@ -11,7 +11,8 @@ body:
       options:
         - No Internship
         - New Grad
-        - Experienced
+        - Experienced (1 page)
+        - Experienced (2 pages)
         - Multiple templates
     validations:
       required: true

@@ -1,4 +1,4 @@
-.PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-roles test-page-limits test-contacts clean
+.PHONY: all no-internship new-grad experienced-one-page experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-roles test-page-limits test-contacts clean
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -7,12 +7,14 @@ PREVIEW_DIR := preview
 OUTPUT_DIR := output/pdf
 NO_INTERNSHIP_SOURCE := templates/no-internship-resume.tex
 NEW_GRAD_SOURCE := templates/new-grad-resume.tex
+EXPERIENCED_ONE_PAGE_SOURCE := templates/experienced-one-page-resume.tex
 EXPERIENCED_SOURCE := templates/experienced-resume.tex
 NEW_GRAD_BUILD_DIR := $(BUILD_DIR)/new-grad
 NO_INTERNSHIP_BUILD_DIR := $(BUILD_DIR)/no-internship
+EXPERIENCED_ONE_PAGE_BUILD_DIR := $(BUILD_DIR)/experienced-one-page
 EXPERIENCED_BUILD_DIR := $(BUILD_DIR)/experienced
 
-all: no-internship new-grad experienced
+all: no-internship new-grad experienced-one-page experienced
 
 no-internship:
 	@mkdir -p "$(NO_INTERNSHIP_BUILD_DIR)"
@@ -21,6 +23,10 @@ no-internship:
 new-grad:
 	@mkdir -p "$(NEW_GRAD_BUILD_DIR)"
 	$(LATEXMK) -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$(NEW_GRAD_BUILD_DIR)" "$(NEW_GRAD_SOURCE)"
+
+experienced-one-page:
+	@mkdir -p "$(EXPERIENCED_ONE_PAGE_BUILD_DIR)"
+	$(LATEXMK) -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$(EXPERIENCED_ONE_PAGE_BUILD_DIR)" "$(EXPERIENCED_ONE_PAGE_SOURCE)"
 
 experienced:
 	@mkdir -p "$(EXPERIENCED_BUILD_DIR)"
@@ -35,12 +41,13 @@ test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
 
 test-pdf-text: all
-	$(PYTHON) tests/check_pdf_text.py --no-internship "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" --new-grad "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" --experienced "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf"
-	$(PYTHON) tests/check_pdf_text.py --no-internship "$(OUTPUT_DIR)/no-internship-resume.pdf" --new-grad "$(OUTPUT_DIR)/new-grad-resume.pdf" --experienced "$(OUTPUT_DIR)/experienced-resume.pdf"
+	$(PYTHON) tests/check_pdf_text.py --no-internship "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" --new-grad "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" --experienced-one-page "$(EXPERIENCED_ONE_PAGE_BUILD_DIR)/experienced-one-page-resume.pdf" --experienced "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf"
+	$(PYTHON) tests/check_pdf_text.py --no-internship "$(OUTPUT_DIR)/no-internship-resume.pdf" --new-grad "$(OUTPUT_DIR)/new-grad-resume.pdf" --experienced-one-page "$(OUTPUT_DIR)/experienced-one-page-resume.pdf" --experienced "$(OUTPUT_DIR)/experienced-resume.pdf"
 
 test-personal-pdf:
 	$(PYTHON) scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
 	$(PYTHON) scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+	$(PYTHON) scripts/check_resume.py output/pdf/experienced-one-page-resume.pdf --max-pages 1
 	$(PYTHON) scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
 
 test-downloads:
@@ -68,15 +75,18 @@ preview: all
 	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
 	cp "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" "$(OUTPUT_DIR)/no-internship-resume.pdf"
 	cp "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" "$(OUTPUT_DIR)/new-grad-resume.pdf"
+	cp "$(EXPERIENCED_ONE_PAGE_BUILD_DIR)/experienced-one-page-resume.pdf" "$(OUTPUT_DIR)/experienced-one-page-resume.pdf"
 	cp "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf" "$(OUTPUT_DIR)/experienced-resume.pdf"
 	@if command -v pdftoppm >/dev/null 2>&1; then \
 		pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" "$(PREVIEW_DIR)/no-internship-resume"; \
 		pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" "$(PREVIEW_DIR)/new-grad-resume"; \
+		pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(EXPERIENCED_ONE_PAGE_BUILD_DIR)/experienced-one-page-resume.pdf" "$(PREVIEW_DIR)/experienced-one-page-resume"; \
 		pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf" "$(PREVIEW_DIR)/experienced-resume-page-1"; \
 		pdftoppm -png -singlefile -f 2 -l 2 -r 180 "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf" "$(PREVIEW_DIR)/experienced-resume-page-2"; \
 	elif command -v magick >/dev/null 2>&1; then \
 		magick -density 180 "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/no-internship-resume.png"; \
 		magick -density 180 "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/new-grad-resume.png"; \
+		magick -density 180 "$(EXPERIENCED_ONE_PAGE_BUILD_DIR)/experienced-one-page-resume.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/experienced-one-page-resume.png"; \
 		magick -density 180 "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/experienced-resume-page-1.png"; \
 		magick -density 180 "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf[1]" -background white -alpha remove -strip "$(PREVIEW_DIR)/experienced-resume-page-2.png"; \
 	else \
@@ -87,4 +97,5 @@ preview: all
 clean:
 	$(LATEXMK) -C -outdir="$(NO_INTERNSHIP_BUILD_DIR)" "$(NO_INTERNSHIP_SOURCE)"
 	$(LATEXMK) -C -outdir="$(NEW_GRAD_BUILD_DIR)" "$(NEW_GRAD_SOURCE)"
+	$(LATEXMK) -C -outdir="$(EXPERIENCED_ONE_PAGE_BUILD_DIR)" "$(EXPERIENCED_ONE_PAGE_SOURCE)"
 	$(LATEXMK) -C -outdir="$(EXPERIENCED_BUILD_DIR)" "$(EXPERIENCED_SOURCE)"

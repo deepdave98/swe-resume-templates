@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_SOURCES = {
     "new-grad": "templates/new-grad-resume.tex",
     "no-internship": "templates/no-internship-resume.tex",
+    "experienced-one-page": "templates/experienced-one-page-resume.tex",
     "experienced": "templates/experienced-resume.tex",
 }
 SHARED_SOURCES = {

@@ -1,0 +1,36 @@
+Your Name
+City, Region ⋄ +1 (555) 555-5555 ⋄ hello@example.com ⋄ LinkedIn ⋄ GitHub
+
+
+Experience
+
+Company A – City, Region                                                                                   Month Year – Present
+Senior Software Engineer
+• Chose [design] over [alternative] for [workflow] because [constraint]; validated [latency, correctness, or capacity requirement]
+  with [test] before rollout.
+• Migrated [service or data store] using [staged rollout] and [rollback condition]; reconciled [records or outputs] to verify
+  [correctness requirement] before retiring the old path.
+• Traced [recurring production failure] to [cause], changed [component], and added [regression test and alert]; [production
+  check] confirmed [specific result].
+• Coordinated [API or schema change] with [dependent teams], documented [compatibility contract], and verified [consumer
+  behavior] before removing [legacy interface].
+
+Company B – City, Region                                                                              Month Year – Month Year
+Software Engineer
+• Built [feature or service] for [user workflow], handling [failure or edge case] with [validation or recovery behavior]; checked
+  [acceptance criterion] in [test or production].
+• Profiled [slow request or job], traced [bottleneck] to [cause], and changed [implementation]; measured [before and after]
+  under [the same load or dataset].
+• Added [test or release check] after [escaped defect], reproduced [failure condition], and verified [fix] across [affected versions
+  or clients].
+
+Skills
+
+• Languages: [Language], [Language], [Language].
+• Systems: [Framework], [Database], [Cloud or Runtime].
+• Tooling: [Testing], [Observability], [CI/CD].
+
+Education
+
+Dalhousie University – Halifax, NS                                                               January 2019 – December 2022
+BS Computer Science

@@ -3,7 +3,7 @@
 [![Build resumes](https://github.com/deepdave98/swe-resume-templates/actions/workflows/build.yml/badge.svg)](https://github.com/deepdave98/swe-resume-templates/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-29627e.svg)](LICENSE)
 
-I made this to help software engineers spend less time on layout, design, fighting with latex and more time showing their work. Start with projects if you have no internship, use the new-grad version if you have relevant work, or choose the two-page experienced version. All three use the same style.
+I made this to help software engineers spend less time on layout, design, fighting with latex and more time showing their work. Start with projects if you have no internship, use the new-grad version if you have relevant work, or put experience first with the one- or two-page experienced version. All use the same style.
 
 The example bullets reflect what I have looked for while hiring engineers: clear ownership, real constraints, and proof the work held up. Every software engineering employer, role, metric, and contact detail is a placeholder.
 
@@ -15,11 +15,14 @@ Edit in Overleaf with no local setup, or download a standalone ZIP. Both paths u
 | --- | --- | --- | --- |
 | No Internship (1 page) | [![Open the No Internship resume in Overleaf](https://img.shields.io/badge/No_Internship-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fno-internship-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/no-internship-resume.zip) | [PDF](output/pdf/no-internship-resume.pdf) |
 | New Grad (1 page) | [![Open the New Grad resume in Overleaf](https://img.shields.io/badge/New_Grad-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fnew-grad-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/new-grad-resume.zip) | [PDF](output/pdf/new-grad-resume.pdf) |
+| Experienced (1 page) | [![Open the one-page Experienced resume in Overleaf](https://img.shields.io/badge/Experienced_1_page-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fexperienced-one-page-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/experienced-one-page-resume.zip) | [PDF](output/pdf/experienced-one-page-resume.pdf) |
 | Experienced (2 pages) | [![Open the Experienced resume in Overleaf](https://img.shields.io/badge/Experienced-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fexperienced-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/experienced-resume.zip) | [PDF](output/pdf/experienced-resume.pdf) |
 
 Open `resume.tex`. Replace the contact details, education, credentials, and example work with your own. Recompile, inspect every page, then download the PDF. The Overleaf buttons select XeLaTeX automatically.
 
 No internship yet? Start with education and projects. Keep course projects labeled as projects, name the part you built, and delete **Other Experience** if it does not apply. You do not need an internship or a certification to fill a section.
+
+Have relevant experience? Start with one page: recent work, skills, then education. The example uses two roles; use your actual history. Choose two pages when additional relevant work earns the space, not because of your title.
 
 Each ZIP contains `resume.tex`, `resume.cls`, `latexmkrc`, `START_HERE.md`, and `LICENSE`. Upload it to Overleaf, or extract it and run `latexmk resume.tex` inside its folder with a local TeX installation. The included config selects XeLaTeX; no repository clone is needed.
 
@@ -35,7 +38,11 @@ New grads usually lead with education; experienced engineers lead with relevant 
 
 [![New grad software engineer resume](preview/new-grad-resume.png)](output/pdf/new-grad-resume.pdf)
 
-### Experienced
+### Experienced (1 page)
+
+[![One-page experienced software engineer resume](preview/experienced-one-page-resume.png)](output/pdf/experienced-one-page-resume.pdf)
+
+### Experienced (2 pages)
 
 <p>
   <a href="output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-1.png" width="49%" alt="Experienced software engineer resume, page 1"></a>
@@ -52,13 +59,14 @@ cd swe-resume-templates
 make
 ```
 
-`make` builds all three templates to `build/`. Use `make no-internship`, `make new-grad`, or `make experienced` to build one. Run `make preview` to refresh the published PDFs and PNGs.
+`make` builds all four templates to `build/`. Use `make no-internship`, `make new-grad`, `make experienced-one-page`, or `make experienced` to build one. Run `make preview` to refresh the published PDFs and PNGs.
 
 On Windows, or without `make`, run `latexmk` from the repository root:
 
 ```bash
 latexmk -xelatex -outdir=build/no-internship templates/no-internship-resume.tex
 latexmk -xelatex -outdir=build/new-grad templates/new-grad-resume.tex
+latexmk -xelatex -outdir=build/experienced-one-page templates/experienced-one-page-resume.tex
 latexmk -xelatex -outdir=build/experienced templates/experienced-resume.tex
 ```
 
@@ -136,7 +144,7 @@ Warnings do not change the PDF or stop compilation. They are reminders, not a fi
 
 ## Page-Limit Reminders
 
-The one-page starters warn if your edits spill onto a second page. The experienced starter warns after two. Check **View logs** in Overleaf or your local compile log for `Page limit exceeded`.
+The one-page starters warn if your edits spill onto a second page. The two-page experienced starter warns after two. Check **View logs** in Overleaf or your local compile log for `Page limit exceeded`.
 
 The budget is near the top of `resume.tex`:
 
@@ -174,7 +182,7 @@ That command prints personal data. Review it locally; redact it before sharing a
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings and grouped roles on Letter and A4, verifies contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
+This builds all four templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings and grouped roles on Letter and A4, verifies contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 

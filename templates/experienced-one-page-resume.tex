@@ -1,0 +1,57 @@
+% !TeX program = xelatex
+\documentclass{resume}
+
+% Warn if edits exceed one page; the class never shrinks your text.
+\resumepagelimit{1}
+
+\hypersetup{
+  pdftitle={One-page Experienced Software Engineer Resume Template},
+  pdfsubject={Experience-first resume template for experienced software engineers}
+}
+
+\begin{document}
+
+% Replace every value in this header with your own details.
+\resumename{Your Name}
+\resumecontact{%
+  City, Region
+  \contactsep \resumephone{+1 (555) 555-5555}
+  \contactsep \resumeemail{hello@example.com}
+  \contactsep \resumelink{https://www.linkedin.com/in/your-handle}{LinkedIn}
+  \contactsep \resumelink{https://github.com/your-handle}{GitHub}
+}
+
+\section{Experience}
+
+% Keep relevant roles in reverse chronological order. Replace titles with yours.
+% These are prompts, not claims to copy. Use only decisions and results you can explain.
+\jobentry{Senior Software Engineer}{Company A}{City, Region}{Month Year -- Present}
+\begin{jobduties}
+  \item Chose [design] over [alternative] for [workflow] because [constraint]; validated [latency, correctness, or capacity requirement] with [test] before rollout.
+  \item Migrated [service or data store] using [staged rollout] and [rollback condition]; reconciled [records or outputs] to verify [correctness requirement] before retiring the old path.
+  \item Traced [recurring production failure] to [cause], changed [component], and added [regression test and alert]; [production check] confirmed [specific result].
+  \item Coordinated [API or schema change] with [dependent teams], documented [compatibility contract], and verified [consumer behavior] before removing [legacy interface].
+\end{jobduties}
+
+\jobentry{Software Engineer}{Company B}{City, Region}{Month Year -- Month Year}
+\begin{jobduties}
+  \item Built [feature or service] for [user workflow], handling [failure or edge case] with [validation or recovery behavior]; checked [acceptance criterion] in [test or production].
+  \item Profiled [slow request or job], traced [bottleneck] to [cause], and changed [implementation]; measured [before and after] under [the same load or dataset].
+  \item Added [test or release check] after [escaped defect], reproduced [failure condition], and verified [fix] across [affected versions or clients].
+\end{jobduties}
+
+\section{Skills}
+\begin{skillitems}
+  \item \textbf{Languages}: [Language], [Language], [Language].
+  \item \textbf{Systems}: [Framework], [Database], [Cloud or Runtime].
+  \item \textbf{Tooling}: [Testing], [Observability], [CI/CD].
+\end{skillitems}
+
+\section{Education}
+
+% Replace with your own education. Coursework and GPA are optional, not filler.
+\jobentry{BS Computer Science}{Dalhousie University}{Halifax, NS}{January 2019 -- December 2022}
+
+% Add a project or certification only if it adds evidence the roles above do not.
+% Cut less relevant bullets before adding a second page. Do not shrink the font.
+\end{document}

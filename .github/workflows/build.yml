@@ -29,6 +29,7 @@ jobs:
           root_file: |
             templates/no-internship-resume.tex
             templates/new-grad-resume.tex
+            templates/experienced-one-page-resume.tex
             templates/experienced-resume.tex
           latexmk_use_xelatex: true
           args: -file-line-error -halt-on-error -interaction=nonstopmode
@@ -36,20 +37,24 @@ jobs:
           post_compile: |
             python3 -m unittest discover -s tests -p 'test_*.py'
             python3 scripts/package_templates.py --check
-            python3 tests/check_pdf_text.py --no-internship no-internship-resume.pdf --new-grad new-grad-resume.pdf --experienced experienced-resume.pdf
-            python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+            python3 tests/check_pdf_text.py --no-internship no-internship-resume.pdf --new-grad new-grad-resume.pdf --experienced-one-page experienced-one-page-resume.pdf --experienced experienced-resume.pdf
+            python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced-one-page output/pdf/experienced-one-page-resume.pdf --experienced output/pdf/experienced-resume.pdf
             python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
             python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
+            python3 scripts/check_resume.py output/pdf/experienced-one-page-resume.pdf --max-pages 1
             python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
             test "$(pdfinfo no-internship-resume.pdf | awk '/^Pages:/ {print $2}')" = "1"
             test "$(pdfinfo new-grad-resume.pdf | awk '/^Pages:/ {print $2}')" = "1"
+            test "$(pdfinfo experienced-one-page-resume.pdf | awk '/^Pages:/ {print $2}')" = "1"
             test "$(pdfinfo experienced-resume.pdf | awk '/^Pages:/ {print $2}')" = "2"
             mkdir -p /tmp/resume-previews
             pdftoppm -png -singlefile -f 1 -l 1 -r 72 no-internship-resume.pdf /tmp/resume-previews/no-internship
             pdftoppm -png -singlefile -f 1 -l 1 -r 72 new-grad-resume.pdf /tmp/resume-previews/new-grad
+            pdftoppm -png -singlefile -f 1 -l 1 -r 72 experienced-one-page-resume.pdf /tmp/resume-previews/experienced-one-page
             pdftoppm -png -singlefile -f 1 -l 1 -r 72 experienced-resume.pdf /tmp/resume-previews/experienced-page-1
             pdftoppm -png -singlefile -f 2 -l 2 -r 72 experienced-resume.pdf /tmp/resume-previews/experienced-page-2
             test -s /tmp/resume-previews/new-grad.png
+            test -s /tmp/resume-previews/experienced-one-page.png
             test -s /tmp/resume-previews/no-internship.png
             test -s /tmp/resume-previews/experienced-page-1.png
             test -s /tmp/resume-previews/experienced-page-2.png
@@ -70,7 +75,9 @@ jobs:
           path: |
             no-internship-resume.pdf
             new-grad-resume.pdf
+            experienced-one-page-resume.pdf
             experienced-resume.pdf
             downloads/new-grad-resume.zip
+            downloads/experienced-one-page-resume.zip
             downloads/no-internship-resume.zip
             downloads/experienced-resume.zip

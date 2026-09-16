@@ -31,6 +31,7 @@ INPUTS = {
 EXPECTED_TEMPLATES = {
     "new-grad": "templates/new-grad-resume.tex",
     "no-internship": "templates/no-internship-resume.tex",
+    "experienced-one-page": "templates/experienced-one-page-resume.tex",
     "experienced": "templates/experienced-resume.tex",
 }
 
@@ -311,9 +312,9 @@ class StarterBuildTests(unittest.TestCase):
             with patch.object(smoke, "check_starter", side_effect=build) as check:
                 with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
                     self.assertEqual(smoke.main(["--downloads-dir", "custom downloads"]), 1)
-                self.assertEqual(check.call_count, 3)
-        self.assertEqual(len(projects), 3)
-        self.assertEqual(len(set(projects)), 3)
+                self.assertEqual(check.call_count, 4)
+        self.assertEqual(len(projects), 4)
+        self.assertEqual(len(set(projects)), 4)
         self.assertTrue(all(" " in path.name for path in projects))
         self.assertTrue(all(not path.exists() for path in projects))
 
