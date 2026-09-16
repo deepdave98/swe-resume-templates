@@ -190,6 +190,7 @@ class ReadmeDownloadTests(unittest.TestCase):
             f"https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/{template}-resume.zip"
             for template in packager.TEMPLATE_SOURCES
         ]
+        self.application_download = "https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/application-versions.zip"
 
     def test_overleaf_buttons_import_each_current_zip_with_xelatex(self):
         imports = []
@@ -199,15 +200,29 @@ class ReadmeDownloadTests(unittest.TestCase):
                 continue
             params = parse_qs(url.query, keep_blank_values=True)
             self.assertEqual(params.get("engine"), ["xelatex"])
-            self.assertEqual(params.get("main_document"), ["resume.tex"])
             self.assertEqual(len(params.get("snip_uri", [])), 1)
+            main_document = "backend.tex" if params["snip_uri"] == [self.application_download] else "resume.tex"
+            self.assertEqual(params.get("main_document"), [main_document])
             imports.extend(params["snip_uri"])
-        self.assertCountEqual(imports, self.downloads)
+        self.assertCountEqual(imports, self.downloads + [self.application_download])
 
     def test_readme_links_directly_to_each_current_zip_once(self):
         for download in self.downloads:
             with self.subTest(download=download):
                 self.assertEqual(self.links.count(download), 1)
+
+    def test_application_project_links_preserve_one_shared_overleaf_project(self):
+        self.assertEqual(self.links.count(self.application_download), 1)
+        guide = (packager.ROOT / "examples/application-versions/README.md").read_text(encoding="utf-8")
+        links = re.findall(r"\]\((https://[^\s)]+)\)", guide)
+        self.assertEqual(links.count(self.application_download), 1)
+        imports = [urlsplit(link) for link in links if urlsplit(link).netloc == "www.overleaf.com" and urlsplit(link).path == "/docs"]
+        self.assertEqual(len(imports), 1)
+        self.assertEqual(parse_qs(imports[0].query), {
+            "snip_uri": [self.application_download],
+            "engine": ["xelatex"],
+            "main_document": ["backend.tex"],
+        })
 
 
 class StarterArchiveTests(unittest.TestCase):

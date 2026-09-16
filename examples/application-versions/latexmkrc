@@ -1,0 +1,8 @@
+# Use the same engine in a repository checkout and the standalone ZIP.
+$pdf_mode = 5;
+
+# The ZIP includes resume.cls here. In the repository, reuse the root class
+# instead of keeping a second copy. latexmk handles the platform's separator.
+if (!-f 'resume.cls' && -f '../../resume.cls') {
+    ensure_path('TEXINPUTS', '../..');
+}

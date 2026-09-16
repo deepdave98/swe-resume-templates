@@ -29,9 +29,9 @@ On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-gra
 
 ## Starter downloads
 
-Run `make downloads` to rebuild all three ZIPs in `downloads/`. Without make, run `python3 scripts/package_templates.py`.
+Run `make downloads` to rebuild the three starter ZIPs and the optional application-versions ZIP in `downloads/`. Without make, run `python3 scripts/package_templates.py` for the starters and `python3 scripts/package_application_versions.py` for the shared-content example.
 
-Each archive contains only the chosen template as `resume.tex`, the shared class, compiler config, start guide, and license. Text is UTF-8 with LF line endings. Fixed ZIP metadata keeps builds identical across checkouts.
+Each regular starter archive contains only the chosen template as `resume.tex`, the shared class, compiler config, start guide, and license. Text is UTF-8 with LF line endings. Fixed ZIP metadata keeps builds identical across checkouts.
 
 `make test-downloads` fails if a ZIP is missing, stale, or contains extra files. It does not regenerate downloads, so CI cannot hide an outdated archive by rebuilding it.
 
@@ -62,6 +62,24 @@ Resolve LaTeX rerun warnings before checking the final length. When a last-page 
 `make test-contacts` compiles email and phone examples, then checks their visible text with `pdftotext` and actual link destinations with `pdfinfo -url`. Both tools come with Poppler. Tests cover edited values, email punctuation, phone formatting, placeholder reminders, and unsupported inputs. These checks do not verify that an inbox or phone number belongs to you; click your final PDF's links too.
 
 ## Change a baseline
+
+### Shared-content application versions
+
+`make test-application-versions` checks the optional project separately from the regular starters. It checks the ZIP against an explicit source allowlist, compiles all three source and downloaded versions, and compares their text with `expected/application-*-1.txt`.
+
+Fixtures cover shared contact, date, and education edits; selected and unselected bullets; changed selection order; unknown commands; placeholder warnings; and Letter/A4 page bounds. The source ZIP contains the full bullet bank, while each PDF must contain only its selected bullets.
+
+Without make:
+
+```bash
+python3 scripts/package_application_versions.py --check
+python3 tests/check_application_versions.py
+python3 tests/check_application_versions.py --published
+```
+
+After changing the example, run `make preview-application-versions` and inspect all three pages. Review their extracted text before updating the matching baselines. Run `make application-download`, then `make test-application-versions`. The other starter baselines should not change.
+
+### Regular starters
 
 After an intentional template edit:
 

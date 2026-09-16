@@ -1,4 +1,5 @@
 .PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts clean
+.PHONY: application-versions application-download preview-application-versions test-application-versions clean-application-versions
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -28,8 +29,9 @@ experienced:
 
 downloads:
 	$(PYTHON) scripts/package_templates.py
+	$(PYTHON) scripts/package_application_versions.py
 
-test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts
+test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts test-application-versions
 
 test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
@@ -60,6 +62,40 @@ test-page-limits:
 
 test-contacts:
 	$(PYTHON) tests/check_contacts.py
+
+# Optional project: leave the default templates and their build targets alone.
+application-versions:
+	@mkdir -p "$(BUILD_DIR)/application-versions"
+	@version_build_dir="$$(cd "$(BUILD_DIR)/application-versions" && pwd)" && \
+		cd examples/application-versions && $(LATEXMK) -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$$version_build_dir" backend.tex frontend.tex infrastructure.tex
+
+application-download:
+	$(PYTHON) scripts/package_application_versions.py
+
+test-application-versions:
+	$(PYTHON) scripts/package_application_versions.py --check
+	$(PYTHON) tests/check_application_versions.py
+	$(PYTHON) tests/check_application_versions.py --published
+
+preview-application-versions: application-versions
+	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
+	@for version in backend frontend infrastructure; do \
+		cp "$(BUILD_DIR)/application-versions/$$version.pdf" "$(OUTPUT_DIR)/application-$$version.pdf" || exit 1; \
+		if command -v pdftoppm >/dev/null 2>&1; then \
+			pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(BUILD_DIR)/application-versions/$$version.pdf" "$(PREVIEW_DIR)/application-$$version" || exit 1; \
+		elif command -v magick >/dev/null 2>&1; then \
+			magick -density 180 "$(BUILD_DIR)/application-versions/$$version.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/application-$$version.png" || exit 1; \
+		else \
+			echo "Install Poppler or ImageMagick to generate the PNG previews."; \
+			exit 1; \
+		fi; \
+	done
+
+clean-application-versions:
+	@if test -d "$(BUILD_DIR)/application-versions"; then \
+		version_build_dir="$$(cd "$(BUILD_DIR)/application-versions" && pwd)" && \
+		cd examples/application-versions && $(LATEXMK) -C -outdir="$$version_build_dir" backend.tex frontend.tex infrastructure.tex; \
+	fi
 
 preview: all
 	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
