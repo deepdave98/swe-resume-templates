@@ -116,6 +116,8 @@ Leave out the optional summary if you do not need it. Pass `{}` as the location 
 
 Long organization names and locations wrap beside the dates. Keep dates concise; do not shrink the font to force a heading onto one line. Unbroken text can still overflow: use a short label for a link instead of printing its full URL.
 
+Several roles at one company? Follow its `\jobentry` and bullets with `\roleentry{Earlier title}{That role's dates}` and a separate `jobduties` list. The employer repeats if a role starts on another page. See the [copy-paste example](docs/multiple-roles.md); use a full `\jobentry` when the employer or location changes.
+
 For A4, use `\documentclass[a4paper]{resume}`. Use `letterpaper` for US Letter. Recompile and inspect every page after changing paper size; line and page breaks can move.
 
 Write what you built, how you built it, and what changed. Experienced bullets should also show scope, tradeoffs, and operational ownership. Use only numbers you can defend.
@@ -172,7 +174,7 @@ That command prints personal data. Review it locally; redact it before sharing a
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks headings and contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
+This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks long headings and grouped roles on Letter and A4, verifies contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
 
 Read the [test guide](tests/README.md) for Windows commands, baseline updates, and what the check cannot catch.
 
@@ -183,7 +185,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── .github/ISSUE_TEMPLATE/       # Bugs, ideas, and example submissions
 ├── .github/workflows/build.yml   # CI builds and PDF checks
 ├── assets/starter/               # Instructions and compiler config for ZIPs
-├── docs/section-order.md         # What to put first, and why
+├── docs/                        # Section order and multiple-role examples
 ├── downloads/                    # Current standalone starter ZIPs
 ├── examples/
 │   ├── engineering-bullets.md    # Role-specific prompts

@@ -57,6 +57,7 @@ jobs:
             python3 tests/check_starter_builds.py
             python3 tests/check_placeholders.py
             python3 tests/check_layout.py
+            python3 tests/check_roles.py
             python3 tests/check_page_limits.py
             python3 tests/check_contacts.py
 
