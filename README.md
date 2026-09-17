@@ -156,7 +156,17 @@ If LaTeX asks you to rerun, recompile before checking length. Its temporary reru
 
 ## Check Your PDF
 
-After editing, download the PDF from Overleaf or build it locally. From the repository root:
+### In your browser — no install
+
+[Download the private PDF reviewer](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/pdf-review.zip). Unzip it, open `pdf-review.html` in your browser, and drop in your finished PDF.
+
+See each page beside its extracted text, inspect actual link destinations, flag pages that appear blank, and copy text into application forms. Processing stays on-device. No uploads, accounts, tracking, or ATS scores. It works offline after download.
+
+Use a current browser. Limit: 20 MB and 20 pages. A scan with no extractable text is not necessarily blank; this tool does not run OCR. Read the [privacy notes and review limits](tools/pdf-review/README.md).
+
+### From the terminal
+
+The existing Python check still works. After downloading your PDF from Overleaf or building it locally, run:
 
 ```bash
 python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
@@ -204,6 +214,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── scripts/                      # PDF checks, starter downloads, and community records
 ├── templates/                    # Resume content
 ├── tests/                        # PDF, download, and compile-warning checks
+├── tools/pdf-review/             # Private, no-install browser review
 ├── CONTRIBUTING.md
 ├── Makefile
 └── resume.cls                    # Shared styling and compile warnings

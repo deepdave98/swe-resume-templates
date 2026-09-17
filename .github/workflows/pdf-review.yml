@@ -1,0 +1,44 @@
+name: Test PDF review
+
+on:
+  push:
+    paths: ['tools/pdf-review/**', 'downloads/pdf-review.zip', '.github/workflows/pdf-review.yml', 'output/pdf/**']
+  pull_request:
+    paths: ['tools/pdf-review/**', 'downloads/pdf-review.zip', '.github/workflows/pdf-review.yml', 'output/pdf/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pdf-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tools/pdf-review
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tools/pdf-review/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - run: npm run build
+      - run: npm test
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: private-pdf-review
+          path: downloads/pdf-review.zip
+          if-no-files-found: error
+          retention-days: 7

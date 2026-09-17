@@ -20,6 +20,12 @@ templates/*.pdf
 # Python test caches
 __pycache__/
 
+# Browser review development and tests
+node_modules/
+tools/pdf-review/test-results/
+tools/pdf-review/playwright-report/
+downloads/pdf-review.html
+
 # Editor and operating-system files
 .DS_Store
 *.swp
