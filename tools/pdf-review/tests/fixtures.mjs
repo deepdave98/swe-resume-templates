@@ -77,11 +77,12 @@ export function pdfFixture(pages = [{ text: "Resume fixture" }], { title = "Resu
     }
     for (const [linkIndex, link] of (page.links ?? []).entries()) {
       const y = 670 - linkIndex * 25;
+      const rectangle = link.rect ?? [72, y, 300, y + 15];
       const destination = link.internal
         ? `/Dest [${pageIds[0]} 0 R /Fit]`
         : `/A << /S /URI /URI ${literal(link.url)} >>`;
-      annotations.push(add(`<< /Type /Annot /Subtype /Link /Rect [72 ${y} 300 ${y + 15}] /Border [0 0 0] ${destination} >>`));
-      content += `\nBT /F1 12 Tf 72 ${y} Td ${literal(link.label ?? "Portfolio")} Tj ET`;
+      annotations.push(add(`<< /Type /Annot /Subtype /Link /Rect [${rectangle.join(" ")}] /Border [0 0 0] ${destination} >>`));
+      content += `\nBT /F1 12 Tf ${rectangle[0] ?? 72} ${rectangle[1] ?? y} Td ${literal(link.label ?? "Portfolio")} Tj ET`;
     }
     if (page.formValue) {
       const appearance = add(stream(`BT /F1 12 Tf 4 8 Td ${literal(page.formValue)} Tj ET`,
@@ -91,7 +92,7 @@ export function pdfFixture(pages = [{ text: "Resume fixture" }], { title = "Resu
       fields.push(field);
     }
     const contentId = add(stream(content));
-    objects[pageId] = `<< /Type /Page /Parent 2 0 R /MediaBox [${page.mediaBox ?? "0 0 612 792"}] /Resources << /Font << /F1 3 0 R ${extraFont} >> ${imageResource} >> /Contents ${contentId} 0 R /Annots [${annotations.map((id) => `${id} 0 R`).join(" ")}] >>`;
+    objects[pageId] = `<< /Type /Page /Parent 2 0 R /MediaBox [${page.mediaBox ?? "0 0 612 792"}] /Rotate ${page.rotation ?? 0} /Resources << /Font << /F1 3 0 R ${extraFont} >> ${imageResource} >> /Contents ${contentId} 0 R /Annots [${annotations.map((id) => `${id} 0 R`).join(" ")}] >>`;
   }
   objects[1] = `<< /Type /Catalog /Pages 2 0 R${fields.length ? ` /AcroForm << /Fields [${fields.map((id) => `${id} 0 R`).join(" ")}] /DA (/F1 12 Tf 0 g) /DR << /Font << /F1 3 0 R >> >> >>` : ""} >>`;
   objects[2] = `<< /Type /Pages /Count ${pages.length} /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] >>`;

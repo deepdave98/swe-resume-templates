@@ -1,5 +1,6 @@
 import { getDocument, PDFWorker, AnnotationMode, PasswordResponses } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { reviewDocument, displayDestination } from './review.mjs';
+import { linkRegion } from './link-region.mjs';
 
 const assets = __PDF_ASSETS__;
 class EmbeddedBinaryDataFactory {
@@ -11,7 +12,7 @@ class EmbeddedBinaryDataFactory {
 }
 
 const byId = id => document.getElementById(id);
-const ui = Object.fromEntries(['pdf-file', 'drop-zone', 'clear-file', 'status', 'error', 'review', 'filename', 'summary', 'pages', 'copy-all', 'all-text', 'password-form', 'password', 'cancel-password'].map(id => [id, byId(id)]));
+const ui = Object.fromEntries(['pdf-file', 'drop-zone', 'clear-file', 'status', 'error', 'review', 'filename', 'summary', 'pages', 'copy-all', 'all-text', 'password-form', 'password', 'cancel-password', 'empty-state', 'review-help'].map(id => [id, byId(id)]));
 let generation = 0;
 let current;
 let submitPassword;
@@ -60,12 +61,15 @@ function clearReview(message = '') {
   ui.password.value = '';
   ui['password-form'].hidden = true;
   ui.review.hidden = true;
+  ui['empty-state'].hidden = false;
+  document.querySelector('.all-text-panel').open = false;
   ui.filename.textContent = '';
   ui.summary.textContent = '';
   ui.error.textContent = '';
   ui.error.hidden = true;
   ui.status.textContent = message;
   ui['copy-all'].disabled = true;
+  ui['copy-all'].textContent = 'Copy all text';
 }
 
 function fail(message) {
@@ -81,12 +85,18 @@ function armTimeout(state) {
   }, 90_000);
 }
 
-async function copyText(textarea) {
+async function copyText(textarea, button) {
   const token = generation;
+  const originalLabel = button.dataset.copyLabel ?? button.textContent;
+  button.dataset.copyLabel = originalLabel;
   try {
     if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(textarea.value);
-    if (generation === token) ui.status.textContent = 'Text copied. Check the spacing before pasting.';
+    if (generation === token) {
+      ui.status.textContent = 'Text copied. Check the spacing before pasting.';
+      button.textContent = 'Copied';
+      setTimeout(() => { if (generation === token) button.textContent = originalLabel; }, 1800);
+    }
   } catch {
     if (generation !== token) return;
     textarea.closest('details')?.setAttribute('open', '');
@@ -104,10 +114,38 @@ function showPage(record) {
   heading.append(badge);
   const layout = element('div', 'page-layout');
   const preview = element('div', 'page-preview');
+  const previewToolbar = element('div', 'preview-toolbar');
+  const selection = element('span', '', 'PDF page');
+  selection.setAttribute('role', 'status');
+  const previewActions = element('div', 'preview-actions');
+  const enlarge = element('button', 'button button--small enlarge-preview', 'Enlarge');
+  enlarge.type = 'button';
+  enlarge.setAttribute('aria-label', `Enlarge page ${record.number} preview`);
+  enlarge.setAttribute('aria-pressed', 'false');
+  enlarge.disabled = true;
+  const back = element('button', 'button button--small', 'Back to link');
+  back.type = 'button';
+  back.hidden = true;
+  previewActions.append(enlarge, back);
+  previewToolbar.append(selection, previewActions);
+  const viewportContainer = element('div', 'preview-viewport');
+  viewportContainer.setAttribute('role', 'region');
+  viewportContainer.setAttribute('aria-label', `Page ${record.number} preview`);
+  // WebKit does not consistently pan a focused overflow region horizontally.
+  viewportContainer.addEventListener('keydown', event => {
+    if (event.target !== viewportContainer || !preview.classList.contains('is-enlarged') || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    viewportContainer.scrollLeft += event.key === 'ArrowRight' ? 80 : -80;
+  });
+  const sheet = element('div', 'page-sheet');
   const canvas = element('canvas');
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', `Rendered PDF page ${record.number}. Extracted text follows.`);
-  preview.append(canvas);
+  sheet.append(canvas);
+  viewportContainer.append(sheet);
+  preview.append(previewToolbar, viewportContainer);
+  const locations = [];
   const content = element('div', 'page-content');
   const toolbar = element('div', 'text-toolbar');
   const label = element('label', '', 'Extracted text');
@@ -121,20 +159,29 @@ function showPage(record) {
   textarea.spellcheck = false;
   textarea.rows = 14;
   textarea.value = record.text;
-  copy.addEventListener('click', () => void copyText(textarea));
+  copy.addEventListener('click', () => void copyText(textarea, copy));
   toolbar.append(label, copy);
   content.append(toolbar, textarea);
   for (const warning of record.warnings) content.append(element('p', 'notice notice--warning', warning.message));
   const links = element('section', 'page-links');
-  links.append(element('h4', '', 'Actual link destinations'));
+  links.append(element('h4', '', 'Link destinations'));
   if (!record.links.length && record.linksStatus === 'ok') links.append(element('p', 'field-hint', 'No link annotations found. Printed URLs may still appear in the text.'));
   else {
-    links.append(element('p', 'field-hint', 'Shown as text, never opened or checked online. Compare these with the labels on the page.'));
+    links.append(element('p', 'field-hint', 'Show a link on the page to check its label. Destinations are not opened.'));
     const list = element('ul', 'link-list');
-    for (const link of record.links) {
+    for (const [index, link] of record.links.entries()) {
       const item = element('li');
       const type = link.type === 'external' ? link.destination.startsWith('mailto:') ? 'Email' : link.destination.startsWith('tel:') ? 'Phone' : 'External link' : link.type;
-      item.append(element('span', 'link-type', type), element('code', 'link-destination', displayDestination(link.destination)));
+      const row = element('div', 'link-toolbar');
+      const locate = element('button', 'button button--small locate-link', 'Show on page');
+      locate.type = 'button';
+      locate.disabled = true;
+      locate.setAttribute('aria-label', `Show link ${index + 1} on page ${record.number}`);
+      locate.setAttribute('aria-pressed', 'false');
+      const positionNote = element('span', 'field-hint position-note', 'Checking position…');
+      row.append(element('span', 'link-type', `${index + 1}. ${type}`), locate);
+      item.append(row, element('code', 'link-destination', displayDestination(link.destination)), positionNote);
+      locations.push({ link, item, locate, positionNote, number: index + 1 });
       if (link.resolvedDestination && link.resolvedDestination !== link.destination) {
         item.append(element('p', 'field-hint', 'PDF reader resolves this to:'), element('code', 'link-destination', displayDestination(link.resolvedDestination)));
       }
@@ -147,7 +194,64 @@ function showPage(record) {
   layout.append(preview, content);
   card.append(heading, layout);
   ui.pages.append(card);
-  return { canvas, badge, preview };
+  return { canvas, badge, preview, sheet, viewportContainer, selection, back, enlarge, locations };
+}
+
+function connectLinkLocations(display, viewport, pageNumber) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const overlay = document.createElementNS(ns, 'svg');
+  overlay.classList.add('link-overlay');
+  overlay.setAttribute('viewBox', `0 0 ${viewport.width} ${viewport.height}`);
+  overlay.setAttribute('preserveAspectRatio', 'none');
+  overlay.setAttribute('aria-hidden', 'true');
+  const highlight = document.createElementNS(ns, 'rect');
+  highlight.classList.add('link-highlight');
+  overlay.append(highlight);
+  overlay.setAttribute('hidden', '');
+  display.sheet.append(overlay);
+  let selected;
+  display.enlarge.disabled = false;
+  display.enlarge.addEventListener('click', () => {
+    const enlarged = display.preview.classList.toggle('is-enlarged');
+    display.enlarge.setAttribute('aria-pressed', String(enlarged));
+    display.enlarge.textContent = enlarged ? 'Fit page' : 'Enlarge';
+    display.enlarge.setAttribute('aria-label', enlarged ? `Fit page ${pageNumber} preview` : `Enlarge page ${pageNumber} preview`);
+    display.viewportContainer.tabIndex = enlarged ? 0 : -1;
+    if (selected) highlight.scrollIntoView({ block: 'center', inline: 'center' });
+  });
+  display.back.addEventListener('click', () => {
+    selected?.locate.focus({ preventScroll: true });
+    selected?.locate.scrollIntoView({ block: 'center', inline: 'nearest' });
+  });
+  for (const location of display.locations) {
+    const region = linkRegion(location.link.rect, viewport);
+    location.positionNote.textContent = region ? '' : 'Position unavailable in this preview.';
+    location.positionNote.hidden = Boolean(region);
+    if (!region) continue;
+    location.locate.disabled = false;
+    location.locate.addEventListener('click', () => {
+      if (selected) {
+        selected.item.classList.remove('is-selected');
+        selected.locate.setAttribute('aria-pressed', 'false');
+      }
+      const deselect = selected === location;
+      selected = deselect ? null : location;
+      display.back.hidden = deselect;
+      if (deselect) {
+        overlay.setAttribute('hidden', '');
+        display.selection.textContent = 'PDF page';
+        return;
+      }
+      location.item.classList.add('is-selected');
+      location.locate.setAttribute('aria-pressed', 'true');
+      for (const [name, value] of Object.entries(region)) highlight.setAttribute(name, String(value));
+      overlay.removeAttribute('hidden');
+      display.selection.textContent = `Link ${location.number} · page ${pageNumber}`;
+      // Keep keyboard focus on the invoking button. Back to link restores it
+      // after inspecting the preview on a narrow screen.
+      highlight.scrollIntoView({ block: 'center', inline: 'center' });
+    });
+  }
 }
 
 // This is a conservative visual hint, not proof that a PDF has no content.
@@ -169,8 +273,9 @@ async function openFile(file) {
   current = state;
   armTimeout(state);
   ui.review.hidden = false;
+  ui['empty-state'].hidden = true;
   ui.filename.textContent = file.name;
-  ui.status.textContent = 'Opening your PDF locally…';
+  ui.status.textContent = 'Opening PDF…';
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     if (token !== generation) return;
@@ -254,6 +359,7 @@ async function openFile(file) {
         if (empty) blank += 1;
         display.badge.textContent = record.textStatus === 'error' ? 'Text extraction needs manual review' : record.textStatus === 'limited' ? 'Text review is incomplete' : empty ? 'Appears blank — inspect this page' : record.hasText ? 'Text extracted' : 'No extractable text — may be a scan';
         if (empty || !record.hasText) display.badge.classList.add('badge--warning');
+        connectLinkLocations(display, viewport, record.number);
         page.cleanup();
       } catch {
         if (token !== generation) return;
@@ -263,11 +369,14 @@ async function openFile(file) {
         display.preview.append(element('p', 'notice notice--warning', 'Preview unavailable. This page was not checked for blankness. Open it in your PDF reader.'));
         display.badge.textContent = 'Preview needs manual review';
         display.badge.classList.add('badge--warning');
+        for (const location of display.locations) location.positionNote.textContent = 'Position unavailable without a preview.';
       }
     }
     if (token !== generation) return;
     const count = result.pageCount;
-    ui.summary.textContent = `${count} ${count === 1 ? 'page' : 'pages'} · ${result.pages.reduce((sum, page) => sum + page.links.length, 0)} link annotations · ${noText} without extracted text · ${blank} appear blank${failed ? ` · ${failed} previews unavailable` : ''}`;
+    const linkCount = result.pages.reduce((sum, page) => sum + page.links.length, 0);
+    ui.summary.textContent = [`${count} ${count === 1 ? 'page' : 'pages'}`, `${linkCount} ${linkCount === 1 ? 'link' : 'links'}`,
+      noText ? `${noText} without extracted text` : '', blank ? `${blank} appear blank` : '', failed ? `${failed} previews unavailable` : ''].filter(Boolean).join(' · ');
     for (const warning of result.warnings) ui.pages.prepend(element('p', 'notice notice--warning', warning.message));
     clearTimeout(state.timer);
     ui.status.textContent = 'Review ready.';
@@ -278,7 +387,7 @@ async function openFile(file) {
 
 ui['pdf-file'].addEventListener('change', event => void openFile(event.target.files[0]));
 ui['clear-file'].addEventListener('click', () => { clearReview('Review cleared.'); ui['pdf-file'].focus(); });
-ui['copy-all'].addEventListener('click', () => void copyText(ui['all-text']));
+ui['copy-all'].addEventListener('click', () => void copyText(ui['all-text'], ui['copy-all']));
 ui['password-form'].addEventListener('submit', event => {
   event.preventDefault();
   const value = ui.password.value;
@@ -297,6 +406,7 @@ ui['drop-zone'].addEventListener('drop', event => {
   void openFile(event.dataTransfer.files[0]);
 });
 window.addEventListener('pagehide', () => clearReview());
+document.querySelector('.help-link').addEventListener('click', () => { ui['review-help'].open = true; });
 const notices = element('details', 'privacy-details');
 notices.append(element('summary', '', 'PDF engine and licenses'), element('pre', 'license-text', __THIRD_PARTY_LICENSES__));
 document.querySelector('footer').before(notices);

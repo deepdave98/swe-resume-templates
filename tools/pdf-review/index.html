@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Review your resume PDF in your browser. Read extracted text, inspect link destinations, and check every page. No uploads or accounts.">
+    <meta name="description" content="Inspect resume PDF pages, extracted text, and link destinations in your browser.">
     <meta name="referrer" content="no-referrer">
-    <title>Private PDF review · SWE resume templates</title>
+    <title>PDF review · SWE resume templates</title>
     <!-- APP_CSP -->
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -13,31 +13,19 @@
     <a class="skip-link" href="#main">Skip to PDF review</a>
     <div class="site-shell">
       <header class="site-header">
-        <a class="site-name" href="https://github.com/deepdave98/swe-resume-templates" rel="noreferrer">SWE resume templates</a>
-        <span class="tool-label">PDF review</span>
+        <h1 id="page-title">PDF review</h1>
+        <a class="site-name" href="https://github.com/deepdave98/swe-resume-templates" rel="noreferrer">SWE resume templates ↗</a>
       </header>
 
       <main id="main">
-        <section class="intro" aria-labelledby="page-title">
-          <p class="eyebrow">One last check before you apply</p>
-          <h1 id="page-title">Check the PDF you’re about to send.</h1>
-          <p class="intro-copy">Read the extracted text. Inspect where links actually go. Check every page, then copy your text into application forms.</p>
-          <p class="privacy-line"><span class="privacy-dot" aria-hidden="true"></span>On-device. No uploads, accounts, tracking, or ATS scores.</p>
-        </section>
-
         <section class="upload-section" aria-label="Choose a resume PDF">
           <div id="drop-zone" class="drop-zone">
-            <svg class="document-icon" width="32" height="38" viewBox="0 0 32 38" fill="none" aria-hidden="true">
-              <path d="M7 1.5h12l11.5 11.5V34a2.5 2.5 0 0 1-2.5 2.5H4A2.5 2.5 0 0 1 1.5 34V4A2.5 2.5 0 0 1 4 1.5h3Z" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M19 2v11h11M8 21h15M8 27h11" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-            <h2>Drop your finished PDF here</h2>
-            <p class="upload-hint" id="file-limits">One PDF. Up to 20 MB and 20 pages.</p>
             <div class="file-picker">
               <input id="pdf-file" class="visually-hidden" type="file" accept="application/pdf,.pdf" aria-describedby="file-limits">
-              <label class="button button--primary" for="pdf-file">Choose a PDF</label>
+              <label class="button button--primary" for="pdf-file">Open PDF</label>
             </div>
-            <p class="upload-note">Your file stays in this tab.</p>
+            <p class="upload-hint" id="file-limits">or drop it here <span>20 MB / 20 pages max</span></p>
+            <a class="help-link" href="#review-help">Help</a>
           </div>
 
           <form id="password-form" class="password-form" hidden>
@@ -52,32 +40,39 @@
 
           <p id="status" class="status" role="status" aria-live="polite" aria-atomic="true"></p>
           <p id="error" class="notice notice--error" role="alert" hidden></p>
-          <noscript><p class="notice notice--error">JavaScript is needed to read the PDF on your device. No server receives your file.</p></noscript>
+          <noscript><p class="notice notice--error">Enable JavaScript to read the PDF in this browser.</p></noscript>
+        </section>
+
+        <section id="empty-state" class="empty-state" aria-labelledby="empty-heading">
+          <h2 id="empty-heading">Open your exported resume.</h2>
+          <p>Compare the PDF with the text and links inside it.</p>
+          <dl class="inspection-list">
+            <div><dt>Pages</dt><dd>Look for clipped lines and accidental blank pages.</dd></div>
+            <div><dt>Text</dt><dd>Check reading order and missing characters. Copy it into application forms.</dd></div>
+            <div><dt>Links</dt><dd>Check the destination behind each email, profile, or portfolio link.</dd></div>
+          </dl>
+          <p class="local-note">The file is read in your browser, not sent to a server.</p>
         </section>
 
         <section id="review" class="review" aria-labelledby="filename" hidden>
           <div class="review-heading">
             <div>
-              <p class="eyebrow">Your review</p>
               <h2 id="filename"></h2>
               <p id="summary" class="summary"></p>
             </div>
-            <button id="clear-file" class="button button--quiet" type="button">Clear file</button>
-          </div>
-
-          <div class="review-guidance">
-            <p>Check the page and its extracted text side by side. Text order may differ from the layout.</p>
-            <p>No text found is not the same as a blank page. Scans need OCR; this tool does not run OCR.</p>
+            <div class="review-actions">
+              <button id="copy-all" class="button" type="button">Copy all text</button>
+              <button id="clear-file" class="button button--quiet" type="button">Clear file</button>
+            </div>
           </div>
 
           <details class="all-text-panel">
             <summary>Text from all pages</summary>
             <div class="all-text-content">
               <div class="text-toolbar">
-                <label for="all-text">For application forms</label>
-                <button id="copy-all" class="button button--small" type="button">Copy all text</button>
+                <label for="all-text">Extracted text</label>
               </div>
-              <p class="field-hint" id="all-text-hint">Check reading order and spacing before pasting. You can also select and copy the text below.</p>
+              <p class="field-hint" id="all-text-hint">Check order and spacing before pasting.</p>
               <textarea id="all-text" class="page-text all-text" rows="12" readonly spellcheck="false" aria-describedby="all-text-hint"></textarea>
             </div>
           </details>
@@ -85,18 +80,20 @@
           <div id="pages" class="pages"></div>
         </section>
 
-        <details class="privacy-details">
-          <summary>What stays private?</summary>
+        <details id="review-help" class="privacy-details">
+          <summary>Help &amp; privacy</summary>
           <div>
-            <p>Your file stays in this tab. Nothing is uploaded or saved by this tool. Copying text puts it on your system clipboard; other apps may read it. Reload or Clear to discard the review.</p>
-            <p>When hosted, the hosting provider can still receive normal page-request data. That does not include your PDF.</p>
+            <p><strong>Text:</strong> extraction order can differ from the layout. Scans and outlined letters may have no text to copy. This tool does not run OCR or predict how an application system reads your resume.</p>
+            <p><strong>Pages:</strong> a blank-page warning comes from the preview. Very faint content can be missed. Check the original PDF if a preview fails.</p>
+            <p><strong>Links:</strong> destinations are displayed as text. They are never opened or checked online.</p>
+            <p><strong>Your file:</strong> processing runs in this tab. The tool does not upload or save the PDF. Clear, reload, or close the page to discard the review. Copied text goes to your system clipboard and may remain in clipboard history.</p>
+            <p>If this page is hosted, the host receives the page request, not your PDF. Browser extensions and your operating system are outside this tool’s control.</p>
           </div>
         </details>
       </main>
 
       <footer class="site-footer">
-        <p>A PDF check, not a hiring prediction.</p>
-        <a href="https://github.com/deepdave98/swe-resume-templates/tree/main/tools/pdf-review" rel="noreferrer">Read the source</a>
+        <a href="https://github.com/deepdave98/swe-resume-templates/tree/main/tools/pdf-review" rel="noreferrer">Source &amp; documentation ↗</a>
       </footer>
     </div>
     <!-- APP_SCRIPT -->
