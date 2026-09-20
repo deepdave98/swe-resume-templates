@@ -1,6 +1,6 @@
 # Template Checks
 
-The optional browser reviewer has a separate [test suite and setup](../tools/pdf-review/README.md#development). It checks offline extraction and rendering, link destinations, invalid and password-protected files, cancellation, clipboard fallback, and the self-contained download. Its Node/browser dependencies are not needed for `make test` or for using the reviewer.
+The optional browser reviewer has a separate [test suite and setup](../tools/pdf-review/README.md#development). It checks offline extraction and rendering, link destinations and their preview positions, invalid and password-protected files, cancellation, clipboard fallback, keyboard controls, narrow screens, and the self-contained download. Its Node/browser dependencies are not needed for `make test` or for using the reviewer.
 
 `make test` builds all three templates, runs unit tests, checks PDFs, headings, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
 

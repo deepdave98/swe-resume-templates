@@ -158,9 +158,9 @@ If LaTeX asks you to rerun, recompile before checking length. Its temporary reru
 
 ### In your browser — no install
 
-[Download the private PDF reviewer](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/pdf-review.zip). Unzip it, open `pdf-review.html` in your browser, and drop in your finished PDF.
+[Download the PDF reviewer](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/pdf-review.zip). Unzip it, open `pdf-review.html` in your browser, and choose your finished PDF.
 
-See each page beside its extracted text, inspect actual link destinations, flag pages that appear blank, and copy text into application forms. Processing stays on-device. No uploads, accounts, tracking, or ATS scores. It works offline after download.
+Read each page beside its extracted text. Select **Show on page** beside a link destination to highlight its location in the PDF. Check for blank pages, then copy text into application forms. The file is processed in your browser; the downloaded tool works offline.
 
 Use a current browser. Limit: 20 MB and 20 pages. A scan with no extractable text is not necessarily blank; this tool does not run OCR. Read the [privacy notes and review limits](tools/pdf-review/README.md).
 
@@ -214,7 +214,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── scripts/                      # PDF checks, starter downloads, and community records
 ├── templates/                    # Resume content
 ├── tests/                        # PDF, download, and compile-warning checks
-├── tools/pdf-review/             # Private, no-install browser review
+├── tools/pdf-review/             # Browser PDF review and link inspection
 ├── CONTRIBUTING.md
 ├── Makefile
 └── resume.cls                    # Shared styling and compile warnings

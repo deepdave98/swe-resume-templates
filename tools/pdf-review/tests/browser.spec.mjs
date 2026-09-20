@@ -49,6 +49,47 @@ async function assertPrivate(context, page, observations) {
   expect(storage).toEqual({ localStorage: 0, sessionStorage: 0, databases: 0 });
 }
 
+async function assertHighlightGeometry(card, expected) {
+  const geometry = await card.evaluate((node) => {
+    const canvas = node.querySelector("canvas");
+    const overlay = node.querySelector(".link-overlay");
+    const highlight = overlay.querySelector(".link-highlight");
+    const bounds = (element) => {
+      const { x, y, width, height } = element.getBoundingClientRect();
+      return { x, y, width, height };
+    };
+    // Firefox includes the non-scaling stroke in getBoundingClientRect. Project
+    // the SVG fill box so every engine checks the same annotation geometry.
+    const box = highlight.getBBox();
+    const matrix = highlight.getScreenCTM();
+    const start = new DOMPoint(box.x, box.y).matrixTransform(matrix);
+    const end = new DOMPoint(box.x + box.width, box.y + box.height).matrixTransform(matrix);
+    return {
+      canvas: bounds(canvas), overlay: bounds(overlay),
+      highlight: { x: start.x, y: start.y, width: end.x - start.x, height: end.y - start.y },
+      viewBox: overlay.getAttribute("viewBox").split(/\s+/).map(Number),
+      attributes: Object.fromEntries(["x", "y", "width", "height"].map((key) => [key, Number(highlight.getAttribute(key))])),
+    };
+  });
+  const scale = geometry.viewBox[2] / expected.pageWidth;
+  expect(geometry.viewBox[0]).toBe(0);
+  expect(geometry.viewBox[1]).toBe(0);
+  expect(geometry.viewBox[3]).toBeCloseTo(expected.pageHeight * scale, 5);
+  for (const key of ["x", "y", "width", "height"]) {
+    expect(geometry.attributes[key], `PDF viewport ${key}`).toBeCloseTo(expected[key] * scale, 5);
+    expect(geometry.overlay[key], `overlay covers canvas ${key}`).toBeCloseTo(geometry.canvas[key], 0);
+  }
+  const displayed = {
+    x: geometry.canvas.x + expected.x / expected.pageWidth * geometry.canvas.width,
+    y: geometry.canvas.y + expected.y / expected.pageHeight * geometry.canvas.height,
+    width: expected.width / expected.pageWidth * geometry.canvas.width,
+    height: expected.height / expected.pageHeight * geometry.canvas.height,
+  };
+  for (const key of ["x", "y", "width", "height"]) {
+    expect(Math.abs(geometry.highlight[key] - displayed[key]), `displayed highlight ${key}`).toBeLessThan(1);
+  }
+}
+
 for (const [label, location] of [["downloaded file", artifactURL], ["hosted page", "/"]]) {
   test(`${label}: reviews the one-page starter without network access`, async ({ page, context }) => {
     const observations = await openReview(page, context, location);
@@ -104,7 +145,7 @@ test("embedded WebAssembly renders a JPEG2000 image without network access", asy
   await reviewFile(page, filePayload(pdfFixture([{ jpeg2000: true }])));
   await expect(page.locator("#pages canvas")).toHaveCount(1);
   await expect(page.locator(".page-card .badge")).toContainText("No extractable text");
-  await expect(page.locator("#summary")).toContainText("0 appear blank");
+  await expect(page.locator("#summary")).not.toContainText("appear blank");
   const hasDarkPixels = await page.locator("#pages canvas").evaluate((canvas) => {
     const pixels = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
     return pixels.some((value, index) => index % 4 !== 3 && value < 50);
@@ -129,7 +170,213 @@ test("shows actual destinations without making PDF links executable", async ({ p
   }
   await expect(page.locator("#pages")).toContainText(/internal|page destination/i);
   await expect(page.locator("#pages a[href]")).toHaveCount(0);
+  const initialURL = page.url();
+  for (const index of [3, 4, 5]) {
+    await page.getByRole("button", { name: `Show link ${index + 1} on page 1`, exact: true }).click();
+    await expect(page.locator(".link-overlay")).toBeVisible();
+    await expect(page.locator(".preview-toolbar [role=status]")).toHaveText(`Link ${index + 1} · page 1`);
+  }
+  expect(page.url()).toBe(initialURL);
+  expect(context.pages()).toHaveLength(1);
   expect(await page.evaluate(() => globalThis.pdfInjected)).toBeUndefined();
+  await assertPrivate(context, page, observations);
+});
+
+for (const [rotation, expected] of [
+  [0, { pageWidth: 612, pageHeight: 792, x: 72, y: 107, width: 228, height: 15 }],
+  [90, { pageWidth: 792, pageHeight: 612, x: 670, y: 72, width: 15, height: 228 }],
+  [180, { pageWidth: 612, pageHeight: 792, x: 312, y: 670, width: 228, height: 15 }],
+  [270, { pageWidth: 792, pageHeight: 612, x: 107, y: 312, width: 15, height: 228 }],
+]) {
+  test(`link location matches the rendered ${rotation}-degree page and stays aligned at 390px`, async ({ page, context }) => {
+    const observations = await openReview(page, context);
+    await reviewFile(page, filePayload(pdfFixture([{
+      rotation, text: "Rotated link position", links: [{ label: "Profile", url: "https://example.test/profile", rect: [72, 670, 300, 685] }],
+    }])));
+    const card = page.locator(".page-card");
+    await expect(card.locator(".link-overlay")).toBeHidden();
+    await page.getByRole("button", { name: "Show link 1 on page 1", exact: true }).click();
+    await expect(card.locator(".link-overlay")).toBeVisible();
+    await expect(card.locator(".link-highlight")).toHaveCount(1);
+    await assertHighlightGeometry(card, expected);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await assertHighlightGeometry(card, expected);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await assertPrivate(context, page, observations);
+  });
+}
+
+test("same-line destinations have separate highlights and keyboard focus can return to the selected link", async ({ page, context }) => {
+  const observations = await openReview(page, context);
+  await reviewFile(page, filePayload(pdfFixture([{ text: "Two links on the same line", links: [
+    { label: "GitHub", url: "https://example.test/code", rect: [72, 670, 160, 685] },
+    { label: "Portfolio", url: "https://example.test/work", rect: [220, 670, 320, 685] },
+  ] }])));
+  const first = page.getByRole("button", { name: "Show link 1 on page 1", exact: true });
+  const second = page.getByRole("button", { name: "Show link 2 on page 1", exact: true });
+  const card = page.locator(".page-card");
+  const rows = card.locator(".link-list li");
+  await first.focus();
+  await page.keyboard.press("Enter");
+  await expect(first).toBeFocused();
+  await expect(first).toHaveAttribute("aria-pressed", "true");
+  await expect(rows.nth(0)).toHaveClass("is-selected");
+  await assertHighlightGeometry(card, { pageWidth: 612, pageHeight: 792, x: 72, y: 107, width: 88, height: 15 });
+  await second.focus();
+  await page.keyboard.press("Space");
+  await expect(first).toHaveAttribute("aria-pressed", "false");
+  await expect(second).toHaveAttribute("aria-pressed", "true");
+  await expect(rows.nth(0)).not.toHaveClass("is-selected");
+  await expect(rows.nth(1)).toHaveClass("is-selected");
+  await expect(card.locator(".preview-toolbar [role=status]")).toHaveText("Link 2 · page 1");
+  await assertHighlightGeometry(card, { pageWidth: 612, pageHeight: 792, x: 220, y: 107, width: 100, height: 15 });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await card.getByRole("button", { name: "Back to link" }).click();
+  await expect(second).toBeFocused();
+  await expect(second).toBeInViewport();
+  await page.keyboard.press("Enter");
+  await expect(second).toHaveAttribute("aria-pressed", "false");
+  await expect(card.locator(".link-overlay")).toBeHidden();
+  await expect(card.locator("li.is-selected")).toHaveCount(0);
+  await expect(card.locator(".preview-toolbar [role=status]")).toHaveText("PDF page");
+  await expect(card.getByRole("button", { name: "Back to link" })).toBeHidden();
+  await assertPrivate(context, page, observations);
+});
+
+test("enlarging a narrow preview keeps the selected link visible and Fit page restores its size", async ({ page, context }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const observations = await openReview(page, context);
+  await reviewFile(page, filePayload(pdfFixture([{ text: "Inspect a lower-right link", links: [
+    { label: "Portfolio", url: "https://example.test/lower-right", rect: [480, 100, 550, 115] },
+  ] }])));
+  const card = page.locator(".page-card");
+  const expected = { pageWidth: 612, pageHeight: 792, x: 480, y: 677, width: 70, height: 15 };
+  const originalWidth = (await card.locator("canvas").boundingBox()).width;
+  await card.locator(".locate-link").click();
+  await card.locator(".enlarge-preview").click();
+  await expect(card.locator(".enlarge-preview")).toHaveAttribute("aria-pressed", "true");
+  await expect(card.locator(".enlarge-preview")).toHaveAccessibleName("Fit page 1 preview");
+  await expect(card.locator(".enlarge-preview")).toHaveText("Fit page");
+  await expect(card.locator(".preview-viewport")).toHaveAttribute("tabindex", "0");
+  expect((await card.locator("canvas").boundingBox()).width).toBeGreaterThan(originalWidth * 2);
+  await assertHighlightGeometry(card, expected);
+  const scrolling = await card.locator(".preview-viewport").evaluate((viewport) => {
+    const visible = viewport.getBoundingClientRect();
+    const selected = viewport.querySelector(".link-highlight").getBoundingClientRect();
+    return {
+      x: viewport.scrollLeft, y: viewport.scrollTop,
+      contained: selected.left >= visible.left && selected.right <= visible.right
+        && selected.top >= visible.top && selected.bottom <= visible.bottom,
+    };
+  });
+  expect(scrolling.x).toBeGreaterThan(0);
+  expect(scrolling.y).toBeGreaterThan(0);
+  expect(scrolling.contained).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await card.locator(".preview-viewport").focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect.poll(() => card.locator(".preview-viewport").evaluate((viewport) => viewport.scrollLeft)).toBeLessThan(scrolling.x);
+  const scrolledLeft = await card.locator(".preview-viewport").evaluate((viewport) => viewport.scrollLeft);
+  await page.keyboard.press("ArrowRight");
+  await expect.poll(() => card.locator(".preview-viewport").evaluate((viewport) => viewport.scrollLeft)).toBeGreaterThan(scrolledLeft);
+  await card.locator(".enlarge-preview").click();
+  await expect(card.locator(".enlarge-preview")).toHaveAttribute("aria-pressed", "false");
+  await expect(card.locator(".enlarge-preview")).toHaveAccessibleName("Enlarge page 1 preview");
+  await expect(card.locator(".enlarge-preview")).toHaveText("Enlarge");
+  await expect(card.locator(".preview-viewport")).toHaveAttribute("tabindex", "-1");
+  expect((await card.locator("canvas").boundingBox()).width).toBeCloseTo(originalWidth, 0);
+  await expect(card.locator(".locate-link")).toHaveAttribute("aria-pressed", "true");
+  await assertHighlightGeometry(card, expected);
+  await assertPrivate(context, page, observations);
+});
+
+test("invalid and off-page rectangles and failed previews explain unavailable link positions", async ({ page, context }) => {
+  const observations = await openReview(page, context);
+  await reviewFile(page, filePayload(pdfFixture([
+    { text: "Invalid link geometry", links: [
+      { url: "https://example.test/zero-area", rect: [72, 670, 72, 685] },
+      { url: "https://example.test/off-page", rect: [700, 670, 800, 685] },
+      { url: "https://example.test/incomplete", rect: [72, 670, 100] },
+    ] },
+    { text: "Preview cannot be rendered", mediaBox: "0 0 20000 20000", links: [{ url: "https://example.test/large-page" }] },
+  ])));
+  await expect(page.locator(".locate-link")).toHaveCount(4);
+  for (const button of await page.locator(".locate-link").all()) await expect(button).toBeDisabled();
+  for (const note of await page.locator(".page-card").first().locator(".position-note").all()) {
+    await expect(note).toBeVisible();
+    await expect(note).toHaveText("Position unavailable in this preview.");
+  }
+  await expect(page.locator(".page-card").nth(1).locator(".position-note")).toHaveText("Position unavailable without a preview.");
+  await expect(page.locator(".page-card").nth(1).locator("canvas")).toHaveCount(0);
+  await expect(page.locator(".link-overlay:not([hidden])")).toHaveCount(0);
+  await assertPrivate(context, page, observations);
+});
+
+test("clearing and replacing a review remove its selected link and highlight", async ({ page, context }) => {
+  const observations = await openReview(page, context);
+  const payload = filePayload(pdfFixture([{ text: "Selected review", links: [{ url: "https://example.test/old" }] }]), "selected.pdf");
+  await reviewFile(page, payload);
+  await page.locator(".locate-link").click();
+  await expect(page.locator(".link-overlay")).toBeVisible();
+  await reviewFile(page, filePayload(pdfFixture([{ text: "Replacement review", links: [{ url: "https://example.test/new" }] }]), "replacement.pdf"));
+  await expect(page.locator(".link-overlay")).toBeHidden();
+  await expect(page.locator(".locate-link")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("li.is-selected")).toHaveCount(0);
+  await expect(page.locator("#pages")).not.toContainText("https://example.test/old");
+  await page.locator(".locate-link").click();
+  await page.locator("#clear-file").click();
+  await expect(page.locator(".link-highlight")).toHaveCount(0);
+  await expect(page.locator("#pages")).toBeEmpty();
+  await expect(page.locator("#pdf-file")).toBeFocused();
+  await reviewFile(page, payload);
+  await expect(page.locator(".link-overlay")).toBeHidden();
+  await expect(page.locator(".locate-link")).toHaveAttribute("aria-pressed", "false");
+  await assertPrivate(context, page, observations);
+});
+
+test("the desktop review puts the preview and copy action within the first screen", async ({ page, context }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const observations = await openReview(page, context);
+  await reviewFile(page, filePayload(pdfFixture([{ text: "Compact resume review" }])));
+  await expect(page.locator("#empty-state")).toBeHidden();
+  await expect(page.locator(".all-text-panel")).not.toHaveAttribute("open");
+  await expect(page.locator("#copy-all")).toBeInViewport();
+  const canvas = await page.locator("#pages canvas").boundingBox();
+  const extracted = await page.locator(".page-card textarea").boundingBox();
+  expect(canvas.y).toBeLessThan(450);
+  expect(canvas.y + canvas.height / 2).toBeLessThan(900);
+  expect(extracted.x).toBeGreaterThan(canvas.x + canvas.width);
+  expect(Math.abs(extracted.y - canvas.y)).toBeLessThan(30);
+  await assertPrivate(context, page, observations);
+});
+
+test("the keyboard file picker has a visible focus indicator and Help opens its explanation", async ({ page, context }) => {
+  const observations = await openReview(page, context);
+  await page.locator(".site-name").focus();
+  await page.keyboard.press("Tab");
+  // Safari can use the macOS Option+Tab setting for buttons and file inputs;
+  // other platforms reach them with Tab, so try their native behavior first.
+  if (context.browser().browserType().name() === "webkit" && !await page.locator("#pdf-file").evaluate((input) => input === document.activeElement)) {
+    await page.locator(".site-name").focus();
+    await page.keyboard.press("Alt+Tab");
+  }
+  await expect(page.locator("#pdf-file")).toBeFocused();
+  const outline = await page.locator('label[for="pdf-file"]').evaluate((label) => {
+    const style = getComputedStyle(label);
+    return { style: style.outlineStyle, width: parseFloat(style.outlineWidth) };
+  });
+  expect(outline.style).toBe("solid");
+  expect(outline.width).toBeGreaterThanOrEqual(2);
+  const chooserPromise = page.waitForEvent("filechooser");
+  await page.keyboard.press("Space");
+  const chooser = await chooserPromise;
+  await chooser.setFiles(filePayload(pdfFixture([{ text: "Chosen with the keyboard" }])));
+  await expect(page.locator("#status")).toHaveText("Review ready.");
+  await expect(page.locator("#all-text")).toHaveValue("Chosen with the keyboard");
+  await expect(page.locator("#review-help")).not.toHaveAttribute("open");
+  await page.locator(".help-link").click();
+  await expect(page.locator("#review-help")).toHaveAttribute("open", "");
+  await expect(page.locator("#review-help > div")).toBeVisible();
   await assertPrivate(context, page, observations);
 });
 
@@ -222,7 +469,7 @@ test("an unsupported page size is not reported as blank", async ({ page, context
   const observations = await openReview(page, context);
   await reviewFile(page, filePayload(pdfFixture([{ text: "Oversized page", mediaBox: "0 0 20000 20000" }])));
   await expect(page.locator(".page-card")).toContainText(/preview unavailable|manual review/i);
-  await expect(page.locator("#summary")).toContainText("0 appear blank");
+  await expect(page.locator("#summary")).not.toContainText("appear blank");
   await expect(page.locator("#pages canvas")).toHaveCount(0);
   await assertPrivate(context, page, observations);
 });
@@ -262,9 +509,11 @@ test("clipboard failure still leaves all text available for manual copying", asy
     document.execCommand = () => false;
   });
   await reviewFile(page, filePayload(pdfFixture([{ text: "Copy this text manually" }])));
-  await page.locator(".all-text-panel summary").click();
+  await expect(page.locator(".all-text-panel")).not.toHaveAttribute("open");
+  await expect(page.locator("#copy-all")).toBeVisible();
   await page.locator("#copy-all").click();
   await expect(page.locator("#all-text")).toBeVisible();
+  await expect(page.locator("#all-text")).toBeFocused();
   await expect(page.locator("#all-text")).toHaveValue("Copy this text manually");
   await expect(page.locator("#status")).toContainText(/select|copy|clipboard/i);
   await assertPrivate(context, page, observations);
@@ -280,12 +529,21 @@ test("copy buttons send only extracted text to the clipboard", async ({ page, co
     });
   });
   await reviewFile(page, filePayload(pdfFixture([{ text: "First page content" }, { text: "Second page content" }])));
-  await page.locator(".page-card").first().getByRole("button", { name: "Copy page text" }).click();
-  await page.locator(".all-text-panel summary").click();
+  const pageCopy = page.locator(".page-card").first().getByRole("button", { name: "Copy page text" });
+  await pageCopy.click();
+  await expect(page.locator(".page-card").first().getByRole("button", { name: "Copied", exact: true })).toBeVisible();
+  await expect(page.locator(".all-text-panel")).not.toHaveAttribute("open");
   await page.locator("#copy-all").click();
+  await expect(page.locator("#copy-all")).toHaveText("Copied");
+  await expect(page.locator("#status")).toContainText("Text copied.");
   expect(await page.evaluate(() => globalThis.copiedValues)).toEqual([
     "First page content", "First page content\n\nSecond page content",
   ]);
+  await page.locator("#clear-file").click();
+  await expect(page.locator("#copy-all")).toHaveText("Copy all text");
+  await expect(page.locator("#copy-all")).toBeDisabled();
+  await expect(page.locator("#all-text")).toHaveValue("");
+  await expect(page.locator("#status")).toHaveText("Review cleared.");
   await assertPrivate(context, page, observations);
 });
 

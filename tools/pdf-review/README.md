@@ -1,12 +1,13 @@
-# Private PDF review
+# PDF review
 
-Check the file you are about to send. Read its extracted text, compare it with the page, and inspect where its links actually go.
+Read a resume PDF beside its extracted text. Check where each link points and where it appears on the page.
 
 ## Use it
 
 1. [Download the reviewer](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/pdf-review.zip).
 2. Unzip it. Open `pdf-review.html` in a current Chrome, Edge, Firefox, or Safari browser.
-3. Drop in your PDF. Read each page and its text. Use **Copy page text** or **Copy all text** for application forms.
+3. Choose **Open PDF** or drop your file onto the file bar.
+4. Read each page and its text. Use **Show on page** to locate a link, and **Copy all text** for application forms.
 
 No install, terminal, account, or internet connection is needed after downloading. Keep the HTML file and use it again. It includes the PDF engine, fonts, and decoding resources; it does not load them from a CDN.
 
@@ -15,11 +16,13 @@ One PDF at a time, up to 20 MB and 20 pages. Password-protected files ask for th
 ## What to check
 
 - **Extracted text:** look for missing words, odd symbols, and wrong reading order. Text order comes from the PDF, not from a guess about its layout. Ligatures such as `ﬁ` become ordinary letters for copying.
-- **Link destinations:** compare the displayed target with the label on the page. Destinations are text only; the tool never follows them or checks whether a website is online. Hidden control characters are shown as escapes. Internal links and unsupported PDF actions are identified separately.
+- **Link destinations:** select **Show on page** beside a destination. Its clickable area is highlighted in the preview so you can compare it with the printed label. **Back to link** returns to that row. Select the same button again to clear the highlight. Destinations remain text only; the tool never follows them or checks whether a website is online. Hidden control characters are shown as escapes. Internal links and unsupported PDF actions are identified separately.
 - **Pages without text:** a scan or outlined lettering may look fine but copy nothing. This tool does not run OCR.
 - **Pages that appear blank:** this is a preview-based hint, not proof. Very faint content can be missed. A failed preview is never counted as a blank page.
 
 Form fields, incomplete extraction, and truncated results get warnings. Review the original PDF if anything is missing. PDF.js and Poppler can produce different text order; neither predicts how every application form or ATS will parse a file. There is no resume score.
+
+Link highlights use the PDF's annotation bounds, not guessed text matches. A PDF can attach a link to a broad area, an image, or no visible label. Missing or off-page bounds get a position warning; a failed preview never gets a highlight. Highlights follow rotated and cropped pages and scale with the preview. Use **Enlarge** to read small labels; **Fit page** restores the full-page view. Neither changes the PDF.
 
 ## Privacy
 
@@ -47,6 +50,8 @@ npm run check
 
 Tests run in Chromium, Firefox, and WebKit. Chromium and Firefox use offline emulation. WebKit blocks all HTTP(S) instead because its offline emulation also blocks local blob workers. Every engine checks for zero post-load network requests and no browser storage.
 
+Interface checks cover file selection, copying without opening the text disclosure, clipboard failure, link highlighting, keyboard controls, rotation, clearing, and narrow screens. For visual review, open the public one- and two-page PDFs at desktop and phone widths. Check the first page is visible without scrolling past instructions, text and URLs wrap, and selecting a link identifies the right area. Repeat with an unreadable PDF and a scan; neither should look like a successful text check.
+
 For a local preview, run `node server.mjs` and open `http://127.0.0.1:4178/`. The server serves only the generated page; it has no upload route.
 
 | File | Purpose |
@@ -54,6 +59,7 @@ For a local preview, run `node server.mjs` and open `http://127.0.0.1:4178/`. Th
 | `index.html`, `styles.css` | Interface and copy |
 | `src/app.mjs` | File lifecycle, worker, previews, clipboard, and DOM |
 | `src/review.mjs` | Bounded text and annotation inspection |
+| `src/link-region.mjs` | Annotation coordinates clipped to the rendered page |
 | `build.mjs` | Embedded PDF.js resources, CSP hashes, and ZIP |
 | `tests/` | Unit, package, privacy, and browser checks |
 
