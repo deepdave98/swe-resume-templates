@@ -1,6 +1,6 @@
 # [Short example title]
 
-- **Discipline:** [backend, frontend, data, or general]
+- **Discipline:** [backend, frontend, data, ai, ml, or general]
 - **Career stage:** [early-career or experienced]
 - **Role:** [Sanitized role, such as Software Engineer]
 - **Attribution:** [Name, GitHub handle, or Anonymous; your public GitHub history stays visible]

@@ -5,7 +5,7 @@ Issues and pull requests are welcome. Keep changes focused.
 ## Template and documentation changes
 
 - Keep shared layout and styling in `resume.cls`.
-- Keep the no-internship and new-grad templates at one page each, and the experienced template at two pages.
+- Keep each starter at one page, except the two-page experienced template.
 - Keep examples shipped in the resume templates and maintainer-written guides fictional: use placeholder companies, roles, metrics, links, and contact details.
 - Run `make` with XeLaTeX.
 - Run `make preview` and review every page if the output changes.
@@ -14,6 +14,8 @@ Issues and pull requests are welcome. Keep changes focused.
 - Run `git diff --check`.
 
 Explain why the change matters. Include before-and-after screenshots for layout changes.
+
+For AI/ML examples, distinguish offline evaluation from production results. State the baseline and data split when they affect the claim. Do not invent research, publications, degrees, or metrics. See the [role guide](docs/ai-ml-resumes.md).
 
 ## Community resume examples
 

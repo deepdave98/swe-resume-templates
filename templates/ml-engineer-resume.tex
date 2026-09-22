@@ -1,0 +1,60 @@
+% !TeX program = xelatex
+\documentclass{resume}
+\resumepagelimit{1}
+
+\hypersetup{
+  pdftitle={Machine Learning Engineer Resume Template},
+  pdfsubject={One-page resume template for model development and production ML engineering}
+}
+
+% Use your actual titles and degree. A master's or publication is not assumed.
+% New grad? Move Education and Projects first; add real research if relevant.
+% See docs/ai-ml-resumes.md in the repository for a research-entry example.
+\begin{document}
+
+\resumename{Your Name}
+\resumecontact{%
+  City, Region
+  \contactsep \resumephone{+1 (555) 555-5555}
+  \contactsep \resumeemail{hello@example.com}
+  \contactsep \resumelink{https://www.linkedin.com/in/your-handle}{LinkedIn}
+  \contactsep \resumelink{https://github.com/your-handle}{GitHub}
+}
+
+\section{Experience}
+
+\jobentry{Machine Learning Engineer}{Company A}{City, Region}{Month Year -- Present}
+\begin{jobduties}
+  \item Trained [model] to predict [target] from [data]; compared it with [simple baseline] on a held-out [time period or entity group], reporting [metric] and [important slice].
+  \item Removed [feature unavailable at prediction time] from training; rebuilt features with point-in-time joins and checked them against logged serving inputs.
+  \item Deployed [model] through [batch job or inference service]; versioned preprocessing with the model and tested missing features and rollback to [previous version].
+  \item Added alerts for [stale features or missing predictions] and tracked [quality metric] as labels arrived; used [failure threshold] to trigger [fallback or investigation].
+\end{jobduties}
+
+\jobentry{Software Engineer}{Company B}{City, Region}{Month Year -- Month Year}
+\begin{jobduties}
+  \item Built [data pipeline] with schema checks and replay-safe writes; reconciled [counts or aggregates] after backfilling [date range].
+  \item Profiled [inference bottleneck] under [batch size, hardware, and load]; changed [component], reducing p95 latency from [A] to [B] ms in a load test.
+\end{jobduties}
+
+\section{Projects}
+
+% A course or personal experiment belongs here, not under an invented employer.
+\jobentry{[Course or personal] project; [Language and library]}{[Prediction project]}{}{[Month Year]}
+\begin{jobduties}
+  \item Split [dataset] by [time or entity] before fitting preprocessing; selected [model settings] on validation data and evaluated once on the reserved test set.
+  \item Compared [model] with [baseline] using [metric and units]; published [code or report] with data splits, settings, and [failure case].
+\end{jobduties}
+
+\section{Skills}
+\begin{skillitems}
+  \item \textbf{Languages}: [Language], [Language].
+  \item \textbf{Modeling}: [Training library], [Model family used], [Evaluation method used].
+  \item \textbf{Data \& Serving}: [Data tool], [Inference runtime], [Deployment platform].
+\end{skillitems}
+
+\section{Education}
+\jobentry{[Degree and Major]}{[University]}{[City, Region]}{[Graduation Month Year]}
+% Add a thesis topic only if it helps explain your fit. Do not invent publications.
+
+\end{document}

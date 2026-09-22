@@ -25,6 +25,8 @@ body:
         - No Internship template
         - New Grad template
         - Experienced template
+        - AI Engineer template
+        - ML Engineer template
         - Multiple templates
         - Repository or documentation
     validations:

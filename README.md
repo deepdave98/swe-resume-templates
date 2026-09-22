@@ -3,9 +3,9 @@
 [![Build resumes](https://github.com/deepdave98/swe-resume-templates/actions/workflows/build.yml/badge.svg)](https://github.com/deepdave98/swe-resume-templates/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-29627e.svg)](LICENSE)
 
-I made this to help software engineers spend less time on layout, design, fighting with latex and more time showing their work. Start with projects if you have no internship, use the new-grad version if you have relevant work, or choose the two-page experienced version. All three use the same style.
+I made these to help engineers spend less time formatting a resume. They share one layout; the section order and examples change with your experience and target role.
 
-The example bullets reflect what I have looked for while hiring engineers: clear ownership, real constraints, and proof the work held up. Every software engineering employer, role, metric, and contact detail is a placeholder.
+When hiring, I want to understand what someone built, what they owned, and how they checked it. The examples follow that approach. Employers, job histories, metrics, and contacts are placeholders, not claims to copy.
 
 ## Pick a Template
 
@@ -16,10 +16,14 @@ Edit in Overleaf with no local setup, or download a standalone ZIP. Both paths u
 | No Internship (1 page) | [![Open the No Internship resume in Overleaf](https://img.shields.io/badge/No_Internship-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fno-internship-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/no-internship-resume.zip) | [PDF](output/pdf/no-internship-resume.pdf) |
 | New Grad (1 page) | [![Open the New Grad resume in Overleaf](https://img.shields.io/badge/New_Grad-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fnew-grad-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/new-grad-resume.zip) | [PDF](output/pdf/new-grad-resume.pdf) |
 | Experienced (2 pages) | [![Open the Experienced resume in Overleaf](https://img.shields.io/badge/Experienced-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fexperienced-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/experienced-resume.zip) | [PDF](output/pdf/experienced-resume.pdf) |
+| AI Engineer (1 page) | [![Open the AI Engineer resume in Overleaf](https://img.shields.io/badge/AI_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fai-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ai-engineer-resume.zip) | [PDF](output/pdf/ai-engineer-resume.pdf) |
+| ML Engineer (1 page) | [![Open the ML Engineer resume in Overleaf](https://img.shields.io/badge/ML_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fml-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ml-engineer-resume.zip) | [PDF](output/pdf/ml-engineer-resume.pdf) |
 
 Open `resume.tex`. Replace the contact details, education, credentials, and example work with your own. Recompile, inspect every page, then download the PDF. The Overleaf buttons select XeLaTeX automatically.
 
-No internship yet? Start with education and projects. Keep course projects labeled as projects, name the part you built, and delete **Other Experience** if it does not apply. You do not need an internship or a certification to fill a section.
+No internship yet? Use the project-first starter. Keep course projects labeled as projects and delete **Other Experience** if it does not apply. Use the new-grad starter for relevant work, or the experienced version when you need a second page.
+
+For AI applications, start with **AI Engineer**. For model training and production ML, use **ML Engineer**. Both lead with work; graduates can move education and projects first. Research is optional. The [AI/ML guide](docs/ai-ml-resumes.md) covers the differences, research entries, bullet prompts, and sources.
 
 Each ZIP contains `resume.tex`, `resume.cls`, `latexmkrc`, `START_HERE.md`, and `LICENSE`. Upload it to Overleaf, or extract it and run `latexmk resume.tex` inside its folder with a local TeX installation. The included config selects XeLaTeX; no repository clone is needed.
 
@@ -31,7 +35,7 @@ Applying to different kinds of roles? The optional [shared-content example](exam
 
 [Open all three in one Overleaf project](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fapplication-versions.zip&engine=xelatex&main_document=backend.tex) · [Download ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/application-versions.zip) · PDFs: [backend](output/pdf/application-backend.pdf), [frontend](output/pdf/application-frontend.pdf), [infrastructure](output/pdf/application-infrastructure.pdf)
 
-Same style, ordinary LaTeX, no generator. The regular templates do not change. Send the selected PDF, not the source ZIP: the ZIP includes unselected work too.
+Send the selected PDF, not the source ZIP: the ZIP includes unselected work too.
 
 ## Previews
 
@@ -50,6 +54,13 @@ Same style, ordinary LaTeX, no generator. The regular templates do not change. S
   <a href="output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-2.png" width="49%" alt="Experienced software engineer resume, page 2"></a>
 </p>
 
+### AI and ML Engineering
+
+<p>
+  <a href="output/pdf/ai-engineer-resume.pdf"><img src="preview/ai-engineer-resume.png" width="49%" alt="AI engineer resume with application evaluation and failure-handling examples"></a>
+  <a href="output/pdf/ml-engineer-resume.pdf"><img src="preview/ml-engineer-resume.png" width="49%" alt="Machine learning engineer resume with data, model evaluation, and serving examples"></a>
+</p>
+
 ## Build Locally
 
 Click **Use this template** at the top of the repository, or clone it. On macOS or Linux:
@@ -60,7 +71,7 @@ cd swe-resume-templates
 make
 ```
 
-`make` builds all three templates to `build/`. Use `make no-internship`, `make new-grad`, or `make experienced` to build one. Run `make preview` to refresh the published PDFs and PNGs.
+`make` builds all five starters to `build/`. To build one, run `make no-internship`, `make new-grad`, `make experienced`, `make ai-engineer`, or `make ml-engineer`. `make preview` refreshes their published PDFs and PNGs.
 
 On Windows, or without `make`, run `latexmk` from the repository root:
 
@@ -68,6 +79,8 @@ On Windows, or without `make`, run `latexmk` from the repository root:
 latexmk -xelatex -outdir=build/no-internship templates/no-internship-resume.tex
 latexmk -xelatex -outdir=build/new-grad templates/new-grad-resume.tex
 latexmk -xelatex -outdir=build/experienced templates/experienced-resume.tex
+latexmk -xelatex -outdir=build/ai-engineer templates/ai-engineer-resume.tex
+latexmk -xelatex -outdir=build/ml-engineer templates/ml-engineer-resume.tex
 ```
 
 ## Local Requirements
@@ -118,7 +131,7 @@ Leave out the optional summary if you do not need it. Pass `{}` as the location 
 
 ```latex
 \begin{jobduties}
-  \item Built [thing] for [user], handled [constraint], and moved [measure] from [A] to [B].
+  \item Fixed [failure] in [workflow] by [change]; added a regression test for [trigger].
 \end{jobduties}
 ```
 
@@ -126,11 +139,11 @@ Long organization names and locations wrap beside the dates. Keep dates concise;
 
 For A4, use `\documentclass[a4paper]{resume}`. Use `letterpaper` for US Letter. Recompile and inspect every page after changing paper size; line and page breaks can move.
 
-Write what you built, how you built it, and what changed. Experienced bullets should also show scope, tradeoffs, and operational ownership. Use only numbers you can defend.
+Describe your part of the work. For senior roles, explain a decision or rollout responsibility. Numbers help when the measurement means something; they are not required in every bullet.
 
-For role-specific prompts, see the [backend](examples/engineering-bullets.md#backend-engineering), [frontend](examples/engineering-bullets.md#frontend-engineering), and [data engineering](examples/engineering-bullets.md#data-engineering) examples for early-career and experienced engineers.
+Bullet prompts: [backend](examples/engineering-bullets.md#backend-engineering), [frontend](examples/engineering-bullets.md#frontend-engineering), [data](examples/engineering-bullets.md#data-engineering), [AI and ML](docs/ai-ml-resumes.md#bullet-prompts). Each covers early-career and experienced work.
 
-The [community examples](examples/community/README.md) pair a real bullet with a reviewed rewrite and explain what changed. No submissions have been accepted yet. [Submit your own](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml), with private details removed. Nothing enters the index until its author approves the final wording and a reviewer completes the [checklist](examples/community/REVIEW.md). Choose a byline or Anonymous; GitHub submission history remains public.
+The [community examples](examples/community/README.md) pair an author's bullet with a reviewed rewrite. None accepted yet. [Submit yours](https://github.com/deepdave98/swe-resume-templates/issues/new?template=resume-example.yml) with private details removed. Publication requires your approval; choosing Anonymous does not hide your GitHub history.
 
 Escape LaTeX's special characters when they appear as text: `\&`, `\%`, `\$`, `\#`, and `\_`.
 
@@ -166,7 +179,7 @@ Use a current browser. Limit: 20 MB and 20 pages. A scan with no extractable tex
 
 ### From the terminal
 
-The existing Python check still works. After downloading your PDF from Overleaf or building it locally, run:
+After exporting your PDF, run:
 
 ```bash
 python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
@@ -190,7 +203,7 @@ That command prints personal data. Review it locally; redact it before sharing a
 make test
 ```
 
-This builds all three templates and checks the built and published PDFs against reviewed text snapshots. Missing words, changed reading order, unmapped characters, and wrong page counts fail. It also checks ZIP freshness, compiles the exact downloads, tests placeholder and page-limit warnings, checks headings and contact-link targets, runs the personal PDF checker, and validates community review records. CI runs the same checks.
+This builds all five starters and checks their text, page counts, downloads, warnings, headings, and contact links. It compiles the exact ZIPs users download. AI/ML checks also cover Letter/A4, education-first ordering, and the optional research block. CI runs the same checks.
 
 The shared-content example has its own checks: all three versions compile, shared edits propagate, and unselected bullets stay out of the PDF. Run just those with `make test-application-versions`. Use `make preview-application-versions` to refresh its PDFs and previews, and `make application-download` to rebuild its ZIP.
 
@@ -203,7 +216,7 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ├── .github/ISSUE_TEMPLATE/       # Bugs, ideas, and example submissions
 ├── .github/workflows/build.yml   # CI builds and PDF checks
 ├── assets/starter/               # Instructions and compiler config for ZIPs
-├── docs/section-order.md         # What to put first, and why
+├── docs/                        # Section order and AI/ML role guidance
 ├── downloads/                    # Current standalone starter ZIPs
 ├── examples/
 │   ├── application-versions/     # Shared facts, different bullet selections
@@ -223,8 +236,6 @@ Read the [test guide](tests/README.md) for Windows commands, baseline updates, a
 ## Before Publishing Yours
 
 Check the source for comments and placeholder contacts, links, employers, and metrics; then inspect the final PDF. LaTeX logs can contain source text and local paths, so review staged files before committing.
-
-CI checks compilation, page counts, and extracted text. Inspect every rendered page before sharing your resume.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) to submit a fix or example. Report vulnerabilities [privately](https://github.com/deepdave98/swe-resume-templates/security/advisories/new).
 

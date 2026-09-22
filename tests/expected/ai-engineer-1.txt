@@ -1,0 +1,41 @@
+Your Name
+City, Region ⋄ +1 (555) 555-5555 ⋄ hello@example.com ⋄ LinkedIn ⋄ GitHub
+
+
+Experience
+
+Company A – City, Region                                                                               Month Year – Present
+AI Engineer
+• Built retrieval for [user task] over [document collection]; enforced document permissions before returning context and
+  tested cross-user access.
+• Created [N] reviewed evaluation cases for [task], including missing evidence and conflicting sources; compared [model or
+  retrieval change] against [baseline] using [scoring rule].
+• Added [schema validation] and bounded retries to [model-backed workflow]; sent unresolved cases to [review queue] instead
+  of committing invalid output.
+• Reduced p95 response time from [A] to [B] seconds by [change], measured at [concurrency and input size]; rechecked
+  [quality criterion] on a held-out evaluation set.
+
+Company B – City, Region                                                                          Month Year – Month Year
+Software Engineer
+• Built [API or worker] for [workflow] with [language and database]; tested timeout recovery without repeating [side effect].
+• Rolled out [service change] behind [feature flag], monitored [failure signal], and verified rollback before expanding traﬀic.
+
+Projects
+
+[Document extraction project]                                                                                   [Month Year]
+Personal project; [Language and tools]
+• Extracted [fields] from [document type] with [model]; compared field-level errors against [parser baseline] on [N] held-out
+  documents.
+• Published [code and evaluation report] with a runnable sample, model version, and failure cases; labeled results as an
+  offline test.
+
+Skills
+
+• Languages: [Language], [Language].
+• AI Tools: [Model API or inference library], [Retrieval library], [Evaluation tool].
+• Software: [Database], [Testing tool], [Deployment platform].
+
+Education
+
+[University] – [City, Region]                                                                      [Graduation Month Year]
+[Degree and Major]

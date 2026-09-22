@@ -1,0 +1,61 @@
+% !TeX program = xelatex
+\documentclass{resume}
+\resumepagelimit{1}
+
+\hypersetup{
+  pdftitle={AI Engineer Resume Template},
+  pdfsubject={One-page resume template for engineers building applications with AI models}
+}
+
+% This example covers applied AI, not model research. Keep your actual job titles.
+% New grad? Move Education and Projects above Experience. Delete jobs you have not held.
+% Replace whole bullets when the example does not match your work.
+\begin{document}
+
+\resumename{Your Name}
+\resumecontact{%
+  City, Region
+  \contactsep \resumephone{+1 (555) 555-5555}
+  \contactsep \resumeemail{hello@example.com}
+  \contactsep \resumelink{https://www.linkedin.com/in/your-handle}{LinkedIn}
+  \contactsep \resumelink{https://github.com/your-handle}{GitHub}
+}
+
+\section{Experience}
+
+\jobentry{AI Engineer}{Company A}{City, Region}{Month Year -- Present}
+\begin{jobduties}
+  \item Built retrieval for [user task] over [document collection]; enforced document permissions before returning context and tested cross-user access.
+  \item Created [N] reviewed evaluation cases for [task], including missing evidence and conflicting sources; compared [model or retrieval change] against [baseline] using [scoring rule].
+  \item Added [schema validation] and bounded retries to [model-backed workflow]; sent unresolved cases to [review queue] instead of committing invalid output.
+  \item Reduced p95 response time from [A] to [B] seconds by [change], measured at [concurrency and input size]; rechecked [quality criterion] on a held-out evaluation set.
+\end{jobduties}
+
+\jobentry{Software Engineer}{Company B}{City, Region}{Month Year -- Month Year}
+\begin{jobduties}
+  \item Built [API or worker] for [workflow] with [language and database]; tested timeout recovery without repeating [side effect].
+  \item Rolled out [service change] behind [feature flag], monitored [failure signal], and verified rollback before expanding traffic.
+\end{jobduties}
+
+\section{Projects}
+
+% Keep this labeled as a project. An API call or demo is not production experience.
+% Link code or an evaluation report only if you have permission to share it.
+\jobentry{Personal project; [Language and tools]}{[Document extraction project]}{}{[Month Year]}
+\begin{jobduties}
+  \item Extracted [fields] from [document type] with [model]; compared field-level errors against [parser baseline] on [N] held-out documents.
+  \item Published [code and evaluation report] with a runnable sample, model version, and failure cases; labeled results as an offline test.
+\end{jobduties}
+
+\section{Skills}
+\begin{skillitems}
+  % List tools you used, not every framework named in a job posting.
+  \item \textbf{Languages}: [Language], [Language].
+  \item \textbf{AI Tools}: [Model API or inference library], [Retrieval library], [Evaluation tool].
+  \item \textbf{Software}: [Database], [Testing tool], [Deployment platform].
+\end{skillitems}
+
+\section{Education}
+\jobentry{[Degree and Major]}{[University]}{[City, Region]}{[Graduation Month Year]}
+
+\end{document}

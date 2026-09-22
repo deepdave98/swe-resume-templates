@@ -70,6 +70,14 @@ class EntryTests(unittest.TestCase):
     def test_complete_record_and_redactions_pass(self):
         self.assertEqual(checker.check_entry(ENTRY, NAME), [])
 
+    def test_ai_and_ml_records_use_the_same_review_requirements(self):
+        for discipline in ("ai", "ml"):
+            with self.subTest(discipline=discipline):
+                text = ENTRY.replace("**Discipline:** backend", f"**Discipline:** {discipline}")
+                name = f"early-career-{discipline}-synthetic-test.md"
+                self.assertEqual(checker.check_entry(text, name), [])
+                self.assertTrue(checker.check_entry(text.replace("- [x]", "- [ ]", 1), name))
+
     def test_each_permission_is_required(self):
         for permission in checker.PERMISSIONS:
             with self.subTest(permission=permission):

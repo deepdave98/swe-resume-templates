@@ -8,7 +8,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DISCIPLINES = {"backend", "frontend", "data", "general"}
+DISCIPLINES = {"backend", "frontend", "data", "ai", "ml", "general"}
 STAGES = {"early-career", "experienced"}
 SECTIONS = (
     "Original wording", "Proposed rewrite", "Contribution and context",

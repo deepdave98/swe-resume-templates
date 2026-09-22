@@ -1,0 +1,43 @@
+Your Name
+City, Region ⋄ +1 (555) 555-5555 ⋄ hello@example.com ⋄ LinkedIn ⋄ GitHub
+
+
+Experience
+
+Company A – City, Region                                                                                  Month Year – Present
+Machine Learning Engineer
+• Trained [model] to predict [target] from [data]; compared it with [simple baseline] on a held-out [time period or entity
+  group], reporting [metric] and [important slice].
+• Removed [feature unavailable at prediction time] from training; rebuilt features with point-in-time joins and checked them
+  against logged serving inputs.
+• Deployed [model] through [batch job or inference service]; versioned preprocessing with the model and tested missing
+  features and rollback to [previous version].
+• Added alerts for [stale features or missing predictions] and tracked [quality metric] as labels arrived; used [failure threshold]
+  to trigger [fallback or investigation].
+
+Company B – City, Region                                                                             Month Year – Month Year
+Software Engineer
+• Built [data pipeline] with schema checks and replay-safe writes; reconciled [counts or aggregates] after backfilling [date
+  range].
+• Profiled [inference bottleneck] under [batch size, hardware, and load]; changed [component], reducing p95 latency from
+  [A] to [B] ms in a load test.
+
+Projects
+
+[Prediction project]                                                                                                [Month Year]
+[Course or personal] project; [Language and library]
+• Split [dataset] by [time or entity] before fitting preprocessing; selected [model settings] on validation data and evaluated
+  once on the reserved test set.
+• Compared [model] with [baseline] using [metric and units]; published [code or report] with data splits, settings, and [failure
+  case].
+
+Skills
+
+• Languages: [Language], [Language].
+• Modeling: [Training library], [Model family used], [Evaluation method used].
+• Data & Serving: [Data tool], [Inference runtime], [Deployment platform].
+
+Education
+
+[University] – [City, Region]                                                                          [Graduation Month Year]
+[Degree and Major]

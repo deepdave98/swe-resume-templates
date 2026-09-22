@@ -4,7 +4,7 @@ City, Region ⋄ +1 (555) 555-5555 ⋄ hello@example.com ⋄ LinkedIn ⋄ GitHub
 
 Education
 
-[University] – [City, Region]                                                                        Expected [Month Year]
+[University] – [City, Region]                                                                         Expected [Month Year]
 [Degree and Major]
 • Relevant coursework: [Course], [Course], [Course].
 
@@ -12,7 +12,7 @@ Projects
 
 [Project name]                                                                                                  [Month Year]
 Personal project; [Languages and tools]
-• Built [application] to help [users] complete [task]; designed [API or data model] and validated [input or access rule].
+• Built [application] for [user task]; designed [API or data model] and tested [input or access rule].
 • Handled failed requests without losing [user input], and tested [retry or recovery path] with [test tool].
 • Published [source or demo link] with setup steps, sample data, and [known limitation] so someone else can run it.
 
@@ -26,10 +26,10 @@ Course project; [Languages and tools]
 
 Other Experience
 
-[Organization] – [City, Region]                                                                 [Month Year – Month Year]
+[Organization] – [City, Region]                                                                  [Month Year – Month Year]
 [Actual role]
-• Handled [responsibility] for [people or team], following [process] and escalating [specific issue] when needed.
-• Noticed [recurring problem], changed [process or instructions], and checked [evidence] to see whether it helped.
+• Handled [actual responsibility] for [people or team]; resolved [common problem] and escalated [issue outside your authority].
+• Rewrote [instructions or handoff] after [recurring mistake]; checked [records or feedback] for repeat issues.
 
 Skills
 

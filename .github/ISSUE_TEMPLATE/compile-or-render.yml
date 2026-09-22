@@ -12,6 +12,8 @@ body:
         - No Internship
         - New Grad
         - Experienced
+        - AI Engineer
+        - ML Engineer
         - Multiple templates
     validations:
       required: true

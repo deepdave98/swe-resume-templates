@@ -1,5 +1,6 @@
 .PHONY: all no-internship new-grad experienced preview downloads test test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts clean
 .PHONY: application-versions application-download preview-application-versions test-application-versions clean-application-versions
+.PHONY: ai-engineer ml-engineer preview-ai-ml test-ai-ml
 
 LATEXMK := latexmk
 PYTHON := python3
@@ -13,7 +14,11 @@ NEW_GRAD_BUILD_DIR := $(BUILD_DIR)/new-grad
 NO_INTERNSHIP_BUILD_DIR := $(BUILD_DIR)/no-internship
 EXPERIENCED_BUILD_DIR := $(BUILD_DIR)/experienced
 
-all: no-internship new-grad experienced
+all: no-internship new-grad experienced ai-engineer ml-engineer
+
+ai-engineer ml-engineer:
+	@mkdir -p "$(BUILD_DIR)/$@"
+	$(LATEXMK) -xelatex -interaction=nonstopmode -halt-on-error -file-line-error -outdir="$(BUILD_DIR)/$@" "templates/$@-resume.tex"
 
 no-internship:
 	@mkdir -p "$(NO_INTERNSHIP_BUILD_DIR)"
@@ -31,19 +36,21 @@ downloads:
 	$(PYTHON) scripts/package_templates.py
 	$(PYTHON) scripts/package_application_versions.py
 
-test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts test-application-versions
+test: test-unit test-pdf-text test-personal-pdf test-downloads test-starters test-placeholders test-layout test-page-limits test-contacts test-application-versions test-ai-ml
 
 test-unit:
 	$(PYTHON) -m unittest discover -s tests -p 'test_*.py'
 
 test-pdf-text: all
-	$(PYTHON) tests/check_pdf_text.py --no-internship "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" --new-grad "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" --experienced "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf"
-	$(PYTHON) tests/check_pdf_text.py --no-internship "$(OUTPUT_DIR)/no-internship-resume.pdf" --new-grad "$(OUTPUT_DIR)/new-grad-resume.pdf" --experienced "$(OUTPUT_DIR)/experienced-resume.pdf"
+	$(PYTHON) tests/check_pdf_text.py --no-internship "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" --new-grad "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" --experienced "$(EXPERIENCED_BUILD_DIR)/experienced-resume.pdf" --ai-engineer "$(BUILD_DIR)/ai-engineer/ai-engineer-resume.pdf" --ml-engineer "$(BUILD_DIR)/ml-engineer/ml-engineer-resume.pdf"
+	$(PYTHON) tests/check_pdf_text.py --no-internship "$(OUTPUT_DIR)/no-internship-resume.pdf" --new-grad "$(OUTPUT_DIR)/new-grad-resume.pdf" --experienced "$(OUTPUT_DIR)/experienced-resume.pdf" --ai-engineer "$(OUTPUT_DIR)/ai-engineer-resume.pdf" --ml-engineer "$(OUTPUT_DIR)/ml-engineer-resume.pdf"
 
 test-personal-pdf:
 	$(PYTHON) scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
 	$(PYTHON) scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
 	$(PYTHON) scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
+	$(PYTHON) scripts/check_resume.py output/pdf/ai-engineer-resume.pdf --max-pages 1
+	$(PYTHON) scripts/check_resume.py output/pdf/ml-engineer-resume.pdf --max-pages 1
 
 test-downloads:
 	$(PYTHON) scripts/package_templates.py --check
@@ -62,6 +69,22 @@ test-page-limits:
 
 test-contacts:
 	$(PYTHON) tests/check_contacts.py
+
+test-ai-ml:
+	$(PYTHON) tests/check_ai_ml.py
+
+preview-ai-ml: ai-engineer ml-engineer
+	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
+	@for role in ai-engineer ml-engineer; do \
+		cp "$(BUILD_DIR)/$$role/$$role-resume.pdf" "$(OUTPUT_DIR)/$$role-resume.pdf" || exit 1; \
+		if command -v pdftoppm >/dev/null 2>&1; then \
+			pdftoppm -png -singlefile -f 1 -l 1 -r 180 "$(BUILD_DIR)/$$role/$$role-resume.pdf" "$(PREVIEW_DIR)/$$role-resume" || exit 1; \
+		elif command -v magick >/dev/null 2>&1; then \
+			magick -density 180 "$(BUILD_DIR)/$$role/$$role-resume.pdf[0]" -background white -alpha remove -strip "$(PREVIEW_DIR)/$$role-resume.png" || exit 1; \
+		else \
+			echo "Install Poppler or ImageMagick to generate the PNG previews."; exit 1; \
+		fi; \
+	done
 
 # Optional project: leave the default templates and their build targets alone.
 application-versions:
@@ -97,7 +120,7 @@ clean-application-versions:
 		cd examples/application-versions && $(LATEXMK) -C -outdir="$$version_build_dir" backend.tex frontend.tex infrastructure.tex; \
 	fi
 
-preview: all
+preview: all preview-ai-ml
 	@mkdir -p "$(PREVIEW_DIR)" "$(OUTPUT_DIR)"
 	cp "$(NO_INTERNSHIP_BUILD_DIR)/no-internship-resume.pdf" "$(OUTPUT_DIR)/no-internship-resume.pdf"
 	cp "$(NEW_GRAD_BUILD_DIR)/new-grad-resume.pdf" "$(OUTPUT_DIR)/new-grad-resume.pdf"
@@ -121,3 +144,5 @@ clean:
 	$(LATEXMK) -C -outdir="$(NO_INTERNSHIP_BUILD_DIR)" "$(NO_INTERNSHIP_SOURCE)"
 	$(LATEXMK) -C -outdir="$(NEW_GRAD_BUILD_DIR)" "$(NEW_GRAD_SOURCE)"
 	$(LATEXMK) -C -outdir="$(EXPERIENCED_BUILD_DIR)" "$(EXPERIENCED_SOURCE)"
+	$(LATEXMK) -C -outdir="$(BUILD_DIR)/ai-engineer" templates/ai-engineer-resume.tex
+	$(LATEXMK) -C -outdir="$(BUILD_DIR)/ml-engineer" templates/ml-engineer-resume.tex

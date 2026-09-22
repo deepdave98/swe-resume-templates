@@ -25,45 +25,46 @@
 
 \jobentry{Staff Software Engineer}{Company A}{City, Region}{Month Year -- Present}
 \begin{jobduties}
-  \item Chose [architecture] for [platform] after comparing [options] against [constraint], then migrated [N] teams while meeting [SLO or cost target].
-  \item Designed [shared capability] and led rollout across [N] teams, reducing [integration or delivery time] from [A] to [B].
-  \item Defined [availability SLO] for [critical workflow] and fixed [leading cause of failures], cutting mean recovery time from [A] minutes to [B] minutes over [time window].
-  \item Mentored [N] engineers through [design reviews or incident rotations]; [N] later led [scope] independently.
+  \item Chose [architecture] for [service] over [alternative] because [constraint]; split the migration into [stages] with [rollback condition].
+  \item Defined [shared API contract] with [consumer teams]; migrated [N] integrations and kept [old behavior] working until clients moved.
+  \item Traced [recurring outage] to [failure mode]; changed [isolation or recovery mechanism] and verified recovery with [failure test].
+  \item Coached [engineers] through [design or on-call responsibility]; documented [decision process] they used to take ownership of [system].
 \end{jobduties}
 
 \jobentry{Senior Software Engineer}{Company B}{City, Region}{Month Year -- Month Year}
 \begin{jobduties}
-  \item Designed [service capability] for [N] requests per second, choosing [approach] to meet [p99 latency or availability target] under [constraint].
-  \item Migrated [system] with [rollout method], moving [N] [clients or records] while meeting [SLO]; [reconciliation check] confirmed [result].
-  \item Chose [approach] over [alternative] for [workflow] because [constraint], reducing [latency, cost, or failures] from [A] to [B].
-  \item Addressed [release failure] with [test, feature flag, or canary], reducing failed deployments from [A of N] to [B of N] over [time windows].
+  \item Designed [service] for [peak load]; bounded [queue or resource use] so [dependency failure] did not exhaust [shared resource].
+  \item Migrated [schema or datastore] with [dual-write or backfill method]; reconciled [records] before cutover and tested rollback.
+  \item Removed [bottleneck] in [request path], reducing production p99 latency from [A] to [B] ms at [comparable load].
+  \item Staged [release] behind [flag or canary]; paused rollout when [signal] crossed [threshold] and fixed [cause] before resuming.
 \end{jobduties}
 
 \jobentry{Software Engineer II}{Company C}{City, Region}{Month Year -- Month Year}
 \begin{jobduties}
-  \item Replaced [manual or synchronous path] with [API, service, or pipeline], processing [N] [requests, records, or events] per [period] within [SLO].
-  \item Traced [bottleneck] to [cause], changed [component], and reduced p95 [latency or runtime] from [A] to [B] at [load].
-  \item Automated [manual workflow], cutting [time or errors] from [A] to [B] and adding [validation or audit control].
+  \item Moved [slow operation] to [background worker]; made writes safe to replay and added handling for jobs that exhausted retries.
+  \item Profiled [query] on [dataset]; changed [index or access pattern] and compared runtime on the same workload.
+  \item Automated [manual workflow] with [validation check]; gave [operator] a way to inspect and rerun failed steps.
 \end{jobduties}
 
 \jobentry{Software Engineer}{Company D}{City, Region}{Month Year -- Month Year}
 \begin{jobduties}
-  \item Shipped [feature] for [user workflow], handled [edge case], and moved [completion, error, or support measure] from [A] to [B].
-  \item Built [API, job, or integration] processing [N] [requests, records, or events] per [period] with [validation, retry, or idempotency control].
-  \item Fixed [defect class] at [root cause] and added [regression test], reducing repeat failures from [A] to [B].
-  \item Resolved [incident] on call, then added an alert for [failure condition] and a tested runbook, cutting median recovery time from [A] minutes to [B] minutes.
+  \item Built [workflow] with recovery from [failed request]; preserved [user input or operation state] and tested retry behavior.
+  \item Added [API operation] with [authorization rule]; tested permitted access and attempts to read another user's records.
+  \item Fixed [defect] caused by [state or timing condition] and kept the failing case as a regression test.
+  \item Resolved [on-call incident], added an alert for [early warning signal], and tested the recovery steps with [teammate or exercise].
 \end{jobduties}
 
-% Keep four recent roles together on page one.
+% This sample uses five roles across two pages. Delete roles you have not held.
+% Remove this break and Experience Continued if your relevant work fits one page.
 \newpage
 
 \section{Experience Continued}
 
 \jobentry{Associate Software Engineer}{Company E}{City, Region}{Month Year -- Month Year}
 \begin{jobduties}
-  \item Built [component] with [technology] for [workflow], meeting [specific acceptance or performance requirement].
-  \item Fixed [defect] and added [regression test], reducing [errors or support issues] from [A] to [B].
-  \item Replaced [duplicated or brittle code] in [module] with [shared abstraction], reducing [defects or change time] from [A] to [B].
+  \item Built [component] with [technology] for [workflow]; tested [acceptance condition] before release.
+  \item Reproduced [defect] from [safe test case], fixed [cause], and added it to the test suite.
+  \item Replaced [duplicated code] with [shared component]; checked that [existing callers] retained their behavior.
 \end{jobduties}
 
 \section{Skills}

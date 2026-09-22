@@ -19,6 +19,8 @@ body:
         - Backend engineering
         - Frontend engineering
         - Data engineering
+        - AI engineering
+        - ML engineering
         - General software engineering
     validations:
       required: true

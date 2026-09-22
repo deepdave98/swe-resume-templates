@@ -1,5 +1,6 @@
 # Conductor workspace context
 .context/
+graphify-out/
 
 # LaTeX build output
 build/

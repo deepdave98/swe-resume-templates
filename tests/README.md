@@ -2,7 +2,7 @@
 
 The optional browser reviewer has a separate [test suite and setup](../tools/pdf-review/README.md#development). It checks offline extraction and rendering, link destinations and their preview positions, invalid and password-protected files, cancellation, clipboard fallback, keyboard controls, narrow screens, and the self-contained download. Its Node/browser dependencies are not needed for `make test` or for using the reviewer.
 
-`make test` builds all three templates, runs unit tests, checks PDFs, headings, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
+`make test` builds all five starters, runs unit tests, checks PDFs, headings, and contact links, compiles the starter ZIPs, tests placeholder and page-limit warnings, and exercises the personal PDF checker. It needs XeLaTeX, `latexmk`, Python 3.9+, and Poppler's `pdftotext` and `pdfinfo` on `PATH`; no pip packages.
 
 The check compares every page with `expected/*.txt` using Poppler's `-layout` reading order. Missing or reordered words, changed punctuation, unmapped characters, and extra or missing pages fail. Whitespace and Unicode ligature differences are ignored. Line-end hyphens are preserved.
 
@@ -15,23 +15,26 @@ Build the PDFs first, then run from the repository root:
 ```bash
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tests/check_pdf_text.py
-python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf
+python3 tests/check_pdf_text.py --no-internship output/pdf/no-internship-resume.pdf --new-grad output/pdf/new-grad-resume.pdf --experienced output/pdf/experienced-resume.pdf --ai-engineer output/pdf/ai-engineer-resume.pdf --ml-engineer output/pdf/ml-engineer-resume.pdf
 python3 scripts/check_resume.py output/pdf/no-internship-resume.pdf --max-pages 1
 python3 scripts/check_resume.py output/pdf/new-grad-resume.pdf --max-pages 1
 python3 scripts/check_resume.py output/pdf/experienced-resume.pdf --max-pages 2
+python3 scripts/check_resume.py output/pdf/ai-engineer-resume.pdf --max-pages 1
+python3 scripts/check_resume.py output/pdf/ml-engineer-resume.pdf --max-pages 1
 python3 scripts/package_templates.py --check
 python3 tests/check_starter_builds.py
 python3 tests/check_placeholders.py
 python3 tests/check_layout.py
 python3 tests/check_page_limits.py
 python3 tests/check_contacts.py
+python3 tests/check_ai_ml.py
 ```
 
-On Windows, use `py -3` instead of `python3`. Pass `--no-internship`, `--new-grad`, and `--experienced` to the PDF checker for other locations.
+On Windows, use `py -3` instead of `python3`. The PDF checker accepts `--no-internship`, `--new-grad`, `--experienced`, `--ai-engineer`, and `--ml-engineer` for other locations.
 
 ## Starter downloads
 
-Run `make downloads` to rebuild the three starter ZIPs and the optional application-versions ZIP in `downloads/`. Without make, run `python3 scripts/package_templates.py` for the starters and `python3 scripts/package_application_versions.py` for the shared-content example.
+Run `make downloads` to rebuild the five starter ZIPs and the optional application-versions ZIP in `downloads/`. Without make, run `python3 scripts/package_templates.py` for the starters and `python3 scripts/package_application_versions.py` for the shared-content example.
 
 Each regular starter archive contains only the chosen template as `resume.tex`, the shared class, compiler config, start guide, and license. Text is UTF-8 with LF line endings. Fixed ZIP metadata keeps builds identical across checkouts.
 
@@ -55,13 +58,19 @@ Wrapped columns can interleave in layout-mode extraction. These stress tests che
 
 `make test-page-limits` checks one- and two-page budgets, extra pages, changed budgets, and invalid inputs. Fixtures cover a first build, a shortened rebuild, reset page numbers, discarded pages, and content added at the end of a document. It also checks that enabling reminders leaves extracted text unchanged.
 
-The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. The shipped starters set budgets of one, one, and two pages.
+The class reads LaTeX's shipped-page counter after the final page. It does not infer length from printed page numbers or a previous build. A missing budget disables the check; invalid values warn without replacing the last valid budget. Starters use one page, except the experienced template's two.
 
 Resolve LaTeX rerun warnings before checking the final length. When a last-page hook needs another run, the kernel can append a temporary page outside its shipped-page counter. A regression covers a two-page document shortened to one: the temporary page disappears on the next run and the settled count is correct.
 
 ## Contact links
 
 `make test-contacts` compiles email and phone examples, then checks their visible text with `pdftotext` and actual link destinations with `pdfinfo -url`. Both tools come with Poppler. Tests cover edited values, email punctuation, phone formatting, placeholder reminders, and unsupported inputs. These checks do not verify that an inbox or phone number belongs to you; click your final PDF's links too.
+
+## AI and ML starters
+
+`make test-ai-ml` compiles both role starters on Letter and A4. It checks page bounds, overlapping words, contact destinations, placeholder warnings, and section order. It also compiles education-first versions and the exact research block from the guide in place of the ML project. No new LaTeX package is required.
+
+The default role templates contain no research or publication claims. Their source, published PDFs, and ZIP builds use `expected/ai-engineer-1.txt` and `expected/ml-engineer-1.txt`. `make preview-ai-ml` refreshes only their PDFs and previews.
 
 ## Change a baseline
 
@@ -85,7 +94,7 @@ After changing the example, run `make preview-application-versions` and inspect 
 
 After an intentional template edit:
 
-1. Run `make preview` and inspect all four pages.
+1. Run `make preview` and inspect all six pages.
 2. Read the extracted text with `pdftotext -layout path/to/resume.pdf -`.
 3. Update the affected page in `expected/` with the reviewed text, without the trailing form feed. Keep dates on the same line as the organization, as layout mode emits them.
 4. Run `make downloads`, then `make test`. Commit the source, refreshed previews/PDFs, ZIPs, and baseline together.
@@ -112,4 +121,4 @@ pdftotext -layout "path/to/your-resume.pdf" -
 
 Check your name, email, dates, headings, bullet order, and text split across pages. This manual command prints personal data; redact it before opening an issue. Do the same with snapshot failure diffs, which quote template text.
 
-`make test-personal-pdf` runs the checker against all three published PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.
+`make test-personal-pdf` runs the checker against all five published starter PDFs. Unit tests cover blank pages, character handling, corrupt/locked files, timeouts, missing tools, command arguments, standalone use, and private-data suppression. Neither check writes to the input PDF.
