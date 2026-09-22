@@ -109,7 +109,7 @@ The snapshots above describe the shipped templates, not your edited resume. Use 
 python3 scripts/check_resume.py "path/to/your-resume.pdf" --max-pages 1
 ```
 
-It requires only Python 3.9+ and Poppler, not TeX or the snapshot files. Omit `--max-pages` for no page limit. For a filename starting with a dash, use `python3 scripts/check_resume.py --max-pages 1 -- -resume.pdf`.
+It requires only Python 3.9+ and Poppler, not TeX or the snapshot files. [Install the dependencies](../docs/local-setup.md#pdf-checker-dependencies). Omit `--max-pages` for no page limit. For a filename starting with a dash, use `python3 scripts/check_resume.py --max-pages 1 -- -resume.pdf`.
 
 The check fails on unreadable or empty files, Poppler errors or warnings, empty text pages, replacement/private-use/control characters, and a page count above your chosen limit. Whitespace, ligatures, punctuation, and language-specific format characters are allowed. Errors name the page or character code, not the surrounding text. Exit codes: `0` passed these checks, `1` failed a check, `2` invalid command arguments.
 
