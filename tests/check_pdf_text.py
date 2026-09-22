@@ -11,7 +11,7 @@ import unicodedata
 
 
 EXPECTED_DIR = Path(__file__).resolve().parent / "expected"
-PAGE_COUNTS = {"new-grad": 1, "no-internship": 1, "experienced": 2}
+PAGE_COUNTS = {"new-grad": 1, "no-internship": 1, "experienced": 2, "ai-engineer": 1, "ml-engineer": 1}
 
 
 class CheckError(Exception):
@@ -93,25 +93,15 @@ def check_pdf(pdf, template):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--new-grad", type=Path,
-        default=Path("build/new-grad/new-grad-resume.pdf"),
-    )
-    parser.add_argument(
-        "--no-internship", type=Path,
-        default=Path("build/no-internship/no-internship-resume.pdf"),
-    )
-    parser.add_argument(
-        "--experienced", type=Path,
-        default=Path("build/experienced/experienced-resume.pdf"),
-    )
+    for template in PAGE_COUNTS:
+        parser.add_argument(
+            f"--{template}", type=Path,
+            default=Path(f"build/{template}/{template}-resume.pdf"),
+        )
     args = parser.parse_args(argv)
     failures = 0
-    for template, pdf in (
-        ("new-grad", args.new_grad),
-        ("no-internship", args.no_internship),
-        ("experienced", args.experienced),
-    ):
+    for template in PAGE_COUNTS:
+        pdf = getattr(args, template.replace("-", "_"))
         try:
             check_pdf(pdf, template)
         except CheckError as error:

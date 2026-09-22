@@ -15,7 +15,7 @@ class TextChecks(unittest.TestCase):
     def test_page_count_registry_covers_all_starters(self):
         self.assertEqual(
             checker.PAGE_COUNTS,
-            {"new-grad": 1, "no-internship": 1, "experienced": 2},
+            {"new-grad": 1, "no-internship": 1, "experienced": 2, "ai-engineer": 1, "ml-engineer": 1},
         )
 
     def test_identical_text_passes(self):
@@ -117,11 +117,11 @@ class CommandChecks(unittest.TestCase):
         with patch.object(
             checker,
             "check_pdf",
-            side_effect=[checker.CheckError("changed"), None, None],
+            side_effect=[checker.CheckError("changed"), None, None, None, None],
         ) as check:
             with redirect_stderr(StringIO()), redirect_stdout(StringIO()):
                 self.assertEqual(checker.main([]), 1)
-            self.assertEqual(check.call_count, 3)
+            self.assertEqual(check.call_count, 5)
 
     def test_cli_returns_success(self):
         with patch.object(checker, "check_pdf") as check, redirect_stdout(StringIO()):
@@ -132,6 +132,8 @@ class CommandChecks(unittest.TestCase):
                 call(Path("build/new-grad/new-grad-resume.pdf"), "new-grad"),
                 call(Path("build/no-internship/no-internship-resume.pdf"), "no-internship"),
                 call(Path("build/experienced/experienced-resume.pdf"), "experienced"),
+                call(Path("build/ai-engineer/ai-engineer-resume.pdf"), "ai-engineer"),
+                call(Path("build/ml-engineer/ml-engineer-resume.pdf"), "ml-engineer"),
             ],
         )
 
@@ -145,6 +147,17 @@ class CommandChecks(unittest.TestCase):
             check.call_args_list[1],
             call(Path("custom folder/no-internship.pdf"), "no-internship"),
         )
+
+    def test_cli_accepts_ai_and_ml_pdf_overrides(self):
+        with patch.object(checker, "check_pdf") as check, redirect_stdout(StringIO()):
+            self.assertEqual(checker.main([
+                "--ai-engineer", "custom folder/ai.pdf",
+                "--ml-engineer", "custom folder/ml.pdf",
+            ]), 0)
+        self.assertEqual(check.call_args_list[-2:], [
+            call(Path("custom folder/ai.pdf"), "ai-engineer"),
+            call(Path("custom folder/ml.pdf"), "ml-engineer"),
+        ])
 
 
 if __name__ == "__main__":

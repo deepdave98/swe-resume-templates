@@ -5,7 +5,7 @@
 ## Checklist
 
 - [ ] `make` passes with XeLaTeX.
-- [ ] The no-internship and new-grad resumes are one page each; the experienced resume is two pages.
+- [ ] The starters are one page each, except the two-page experienced resume.
 - [ ] I refreshed the PDFs and previews if the rendered output changed.
 - [ ] `make downloads` and `make test` pass.
 - [ ] I did not add real contact details, employers, or private information to the software engineering examples.

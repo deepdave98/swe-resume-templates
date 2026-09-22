@@ -14,7 +14,7 @@ import check_pdf_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATES = ("new-grad", "no-internship", "experienced")
+TEMPLATES = ("new-grad", "no-internship", "experienced", "ai-engineer", "ml-engineer")
 ARCHIVE_FILES = frozenset({"resume.tex", "resume.cls", "latexmkrc", "START_HERE.md", "LICENSE"})
 
 

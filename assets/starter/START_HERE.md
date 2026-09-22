@@ -9,6 +9,8 @@ Edit `resume.tex`. Styling lives in `resume.cls`.
 
 Using the no-internship starter? Keep course projects labeled as projects and describe your own part of team work. Delete **Other Experience** if you have no work, volunteering, or club responsibility to include.
 
+Using an AI/ML starter? Keep your actual job titles and degree. Move education and projects first if they are stronger than your work experience. Include research only if you did it; do not present an offline experiment as a production result. The [AI/ML guide](https://github.com/deepdave98/swe-resume-templates/blob/main/docs/ai-ml-resumes.md) includes a research entry you can adapt.
+
 ## Contacts
 
 Edit the values in `\resumeemail{alex_morgan+jobs@example.com}` and `\resumephone{+1 (416) 555-0123}` once. They supply both the visible text and the link. Use a literal email and include `+` with your phone's country code. Phone spaces, parentheses, hyphens, and periods stay visible but are removed from the `tel:` link.

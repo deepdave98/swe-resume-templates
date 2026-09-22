@@ -1,29 +1,38 @@
 Your Name
 City, Region ⋄ +1 (555) 555-5555 ⋄ hello@example.com ⋄ LinkedIn ⋄ GitHub
 
+
 Experience
-Company A – City, Region Month Year – Present
+
+Company A – City, Region                                                                                Month Year – Present
 Staff Software Engineer
-• Chose [architecture] for [platform] after comparing [options] against [constraint], then migrated [N] teams while meeting [SLO or cost target].
-• Designed [shared capability] and led rollout across [N] teams, reducing [integration or delivery time] from [A] to [B].
-• Defined [availability SLO] for [critical workflow] and fixed [leading cause of failures], cutting mean recovery time from [A] minutes to [B] minutes over [time window].
-• Mentored [N] engineers through [design reviews or incident rotations]; [N] later led [scope] independently.
-Company B – City, Region Month Year – Month Year
+• Chose [architecture] for [service] over [alternative] because [constraint]; split the migration into [stages] with [rollback
+  condition].
+• Defined [shared API contract] with [consumer teams]; migrated [N] integrations and kept [old behavior] working until
+  clients moved.
+• Traced [recurring outage] to [failure mode]; changed [isolation or recovery mechanism] and verified recovery with [failure
+  test].
+• Coached [engineers] through [design or on-call responsibility]; documented [decision process] they used to take ownership
+  of [system].
+
+Company B – City, Region                                                                           Month Year – Month Year
 Senior Software Engineer
-• Designed [service capability] for [N] requests per second, choosing [approach] to meet [p99 latency or availability target] under [constraint].
-• Migrated [system] with [rollout method], moving [N] [clients or records] while meeting [SLO]; [reconciliation check] con-
-firmed [result].
-• Chose [approach] over [alternative] for [workflow] because [constraint], reducing [latency, cost, or failures] from [A] to [B].
-• Addressed [release failure] with [test, feature flag, or canary], reducing failed deployments from [A of N] to [B of N] over [time windows].
-Company C – City, Region Month Year – Month Year
+• Designed [service] for [peak load]; bounded [queue or resource use] so [dependency failure] did not exhaust [shared resource].
+• Migrated [schema or datastore] with [dual-write or backfill method]; reconciled [records] before cutover and tested rollback.
+• Removed [bottleneck] in [request path], reducing production p99 latency from [A] to [B] ms at [comparable load].
+• Staged [release] behind [flag or canary]; paused rollout when [signal] crossed [threshold] and fixed [cause] before resuming.
+
+Company C – City, Region                                                                           Month Year – Month Year
 Software Engineer II
-• Replaced [manual or synchronous path] with [API, service, or pipeline], processing [N] [requests, records, or events] per [period] within [SLO].
-• Traced [bottleneck] to [cause], changed [component], and reduced p95 [latency or runtime] from [A] to [B] at [load].
-• Automated [manual workflow], cutting [time or errors] from [A] to [B] and adding [validation or audit control].
-Company D – City, Region Month Year – Month Year
+• Moved [slow operation] to [background worker]; made writes safe to replay and added handling for jobs that exhausted
+  retries.
+• Profiled [query] on [dataset]; changed [index or access pattern] and compared runtime on the same workload.
+• Automated [manual workflow] with [validation check]; gave [operator] a way to inspect and rerun failed steps.
+
+Company D – City, Region                                                                           Month Year – Month Year
 Software Engineer
-• Shipped [feature] for [user workflow], handled [edge case], and moved [completion, error, or support measure] from [A] to [B].
-• Built [API, job, or integration] processing [N] [requests, records, or events] per [period] with [validation, retry, or idempo-
-tency control].
-• Fixed [defect class] at [root cause] and added [regression test], reducing repeat failures from [A] to [B].
-• Resolved [incident] on call, then added an alert for [failure condition] and a tested runbook, cutting median recovery time from [A] minutes to [B] minutes.
+• Built [workflow] with recovery from [failed request]; preserved [user input or operation state] and tested retry behavior.
+• Added [API operation] with [authorization rule]; tested permitted access and attempts to read another user’s records.
+• Fixed [defect] caused by [state or timing condition] and kept the failing case as a regression test.
+• Resolved [on-call incident], added an alert for [early warning signal], and tested the recovery steps with [teammate or
+  exercise].
