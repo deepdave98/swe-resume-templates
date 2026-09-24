@@ -74,7 +74,7 @@ In a clone, `make` builds all five starters to `build/`; `make new-grad` builds 
 
 [Download the PDF reviewer](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/pdf-review.zip). Unzip it, open `pdf-review.html` in your browser, and choose your finished PDF.
 
-Compare pages with extracted text, inspect link destinations, and copy text into application forms. Processing stays in your browser; the download works offline.
+Compare pages with extracted text, inspect link destinations, and copy text into application forms. Known sample contacts get a warning. Processing stays in your browser; the download works offline.
 
 Limit: 20 MB and 20 pages. No OCR or ATS score. [Review limits and privacy](tools/pdf-review/README.md) · [Terminal checker](tests/README.md#check-your-own-resume).
 

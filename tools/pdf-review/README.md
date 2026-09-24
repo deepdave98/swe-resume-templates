@@ -17,6 +17,7 @@ One PDF at a time, up to 20 MB and 20 pages. Password-protected files ask for th
 
 - **Extracted text:** look for missing words, odd symbols, and wrong reading order. Text order comes from the PDF, not from a guess about its layout. Ligatures such as `ﬁ` become ordinary letters for copying.
 - **Link destinations:** select **Show on page** beside a destination. Its clickable area is highlighted in the preview so you can compare it with the printed label. **Back to link** returns to that row. Select the same button again to clear the highlight. Destinations remain text only; the tool never follows them or checks whether a website is online. Hidden control characters are shown as escapes. Internal links and unsupported PDF actions are identified separately.
+- **Sample contacts:** flags the starters' `hello@example.com`, `+1 (555) 555-5555`, and GitHub/LinkedIn `your-handle` destinations, even behind a different label. Replace them in the source and export again. Other placeholders may be missed; link ownership is not checked.
 - **Pages without text:** a scan or outlined lettering may look fine but copy nothing. This tool does not run OCR.
 - **Pages that appear blank:** this is a preview-based hint, not proof. Very faint content can be missed. A failed preview is never counted as a blank page.
 
