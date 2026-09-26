@@ -9,11 +9,11 @@ LaTeX resumes for software, AI, and ML engineers. Edit in Overleaf or build loca
 
 | Template | Edit online | Download | Preview |
 | --- | --- | --- | --- |
-| No Internship (1 page) | [![Open the No Internship resume in Overleaf](https://img.shields.io/badge/No_Internship-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fno-internship-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/no-internship-resume.zip) | [PDF](output/pdf/no-internship-resume.pdf) |
-| New Grad (1 page) | [![Open the New Grad resume in Overleaf](https://img.shields.io/badge/New_Grad-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fnew-grad-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/new-grad-resume.zip) | [PDF](output/pdf/new-grad-resume.pdf) |
-| Experienced (2 pages) | [![Open the Experienced resume in Overleaf](https://img.shields.io/badge/Experienced-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fexperienced-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/experienced-resume.zip) | [PDF](output/pdf/experienced-resume.pdf) |
-| AI Engineer (1 page) | [![Open the AI Engineer resume in Overleaf](https://img.shields.io/badge/AI_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fai-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ai-engineer-resume.zip) | [PDF](output/pdf/ai-engineer-resume.pdf) |
-| ML Engineer (1 page) | [![Open the ML Engineer resume in Overleaf](https://img.shields.io/badge/ML_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fml-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ml-engineer-resume.zip) | [PDF](output/pdf/ml-engineer-resume.pdf) |
+| No Internship (1 page) | [![Open the No Internship resume in Overleaf](https://img.shields.io/badge/No_Internship-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fno-internship-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/no-internship-resume.zip) · [PDF](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/no-internship-resume.pdf) | [Image](preview/no-internship-resume.png) |
+| New Grad (1 page) | [![Open the New Grad resume in Overleaf](https://img.shields.io/badge/New_Grad-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fnew-grad-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/new-grad-resume.zip) · [PDF](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/new-grad-resume.pdf) | [Image](preview/new-grad-resume.png) |
+| Experienced (2 pages) | [![Open the Experienced resume in Overleaf](https://img.shields.io/badge/Experienced-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fexperienced-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/experienced-resume.zip) · [PDF](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/experienced-resume.pdf) | [Page 1](preview/experienced-resume-page-1.png) · [Page 2](preview/experienced-resume-page-2.png) |
+| AI Engineer (1 page) | [![Open the AI Engineer resume in Overleaf](https://img.shields.io/badge/AI_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fai-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ai-engineer-resume.zip) · [PDF](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/ai-engineer-resume.pdf) | [Image](preview/ai-engineer-resume.png) |
+| ML Engineer (1 page) | [![Open the ML Engineer resume in Overleaf](https://img.shields.io/badge/ML_Engineer-Open_in_Overleaf-47A141?logo=overleaf&logoColor=white)](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fml-engineer-resume.zip&engine=xelatex&main_document=resume.tex) | [Starter ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/ml-engineer-resume.zip) · [PDF](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/ml-engineer-resume.pdf) | [Image](preview/ml-engineer-resume.png) |
 
 The no-internship starter emphasizes projects; new grad leads with education; experienced with work. Use a second page only when relevant experience needs it. [Section order guide](docs/section-order.md).
 
@@ -24,24 +24,24 @@ AI Engineer covers applications built with models; ML Engineer covers model trai
 
 ### No Internship
 
-[![Project-first resume for students without a software engineering internship](preview/no-internship-resume.png)](output/pdf/no-internship-resume.pdf)
+[![Project-first resume for students without a software engineering internship](preview/no-internship-resume.png)](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/no-internship-resume.pdf)
 
 ### New Grad
 
-[![New grad software engineer resume](preview/new-grad-resume.png)](output/pdf/new-grad-resume.pdf)
+[![New grad software engineer resume](preview/new-grad-resume.png)](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/new-grad-resume.pdf)
 
 ### Experienced
 
 <p>
-  <a href="output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-1.png" width="49%" alt="Experienced software engineer resume, page 1"></a>
-  <a href="output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-2.png" width="49%" alt="Experienced software engineer resume, page 2"></a>
+  <a href="https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-1.png" width="49%" alt="Experienced software engineer resume, page 1"></a>
+  <a href="https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/experienced-resume.pdf"><img src="preview/experienced-resume-page-2.png" width="49%" alt="Experienced software engineer resume, page 2"></a>
 </p>
 
 ### AI and ML Engineering
 
 <p>
-  <a href="output/pdf/ai-engineer-resume.pdf"><img src="preview/ai-engineer-resume.png" width="49%" alt="AI engineer resume with application evaluation and failure-handling examples"></a>
-  <a href="output/pdf/ml-engineer-resume.pdf"><img src="preview/ml-engineer-resume.png" width="49%" alt="Machine learning engineer resume with data, model evaluation, and serving examples"></a>
+  <a href="https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/ai-engineer-resume.pdf"><img src="preview/ai-engineer-resume.png" width="49%" alt="AI engineer resume with application evaluation and failure-handling examples"></a>
+  <a href="https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/ml-engineer-resume.pdf"><img src="preview/ml-engineer-resume.png" width="49%" alt="Machine learning engineer resume with data, model evaluation, and serving examples"></a>
 </p>
 
 </details>
@@ -82,7 +82,7 @@ Limit: 20 MB and 20 pages. No OCR or ATS score. [Review limits and privacy](tool
 
 The optional [shared-content project](examples/application-versions/README.md) keeps facts in one place and selects different bullets for backend, frontend, and infrastructure applications. Edit a shared date once, then recompile each version.
 
-[Open in Overleaf](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fapplication-versions.zip&engine=xelatex&main_document=backend.tex) · [ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/application-versions.zip) · PDFs: [backend](output/pdf/application-backend.pdf), [frontend](output/pdf/application-frontend.pdf), [infrastructure](output/pdf/application-infrastructure.pdf).
+[Open in Overleaf](https://www.overleaf.com/docs?snip_uri=https%3A%2F%2Fraw.githubusercontent.com%2Fdeepdave98%2Fswe-resume-templates%2Fmain%2Fdownloads%2Fapplication-versions.zip&engine=xelatex&main_document=backend.tex) · [ZIP](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/downloads/application-versions.zip) · PDFs: [backend](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/application-backend.pdf), [frontend](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/application-frontend.pdf), [infrastructure](https://raw.githubusercontent.com/deepdave98/swe-resume-templates/main/output/pdf/application-infrastructure.pdf).
 
 Send the PDF, not the ZIP: the source includes unselected work.
 
