@@ -1,9 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { encryptedFixture, filePayload, pdfFixture } from "./fixtures.mjs";
 
 const artifactURL = new URL("../../../downloads/pdf-review.html", import.meta.url).href;
 const resumePath = (name) => fileURLToPath(new URL(`../../../output/pdf/${name}.pdf`, import.meta.url));
+const publishedPDFs = readdirSync(new URL("../../../output/pdf/", import.meta.url))
+  .filter((name) => name.endsWith(".pdf")).sort();
 
 async function openReview(page, context, location = "/") {
   const errors = [];
@@ -100,6 +103,30 @@ for (const [label, location] of [["downloaded file", artifactURL], ["hosted page
     await expect(page.locator("#pages")).toContainText("mailto:");
     await expect(page.locator("#pages canvas")).toHaveCount(1);
     expect(await page.locator("#pages canvas").evaluate((canvas) => canvas.width > 0 && canvas.height > 0)).toBe(true);
+    await assertPrivate(context, page, observations);
+  });
+}
+
+for (const filename of publishedPDFs) {
+  test(`renders every page of published ${filename}`, async ({ page, context }) => {
+    const observations = await openReview(page, context, artifactURL);
+    await reviewFile(page, resumePath(filename.slice(0, -4)));
+    const cards = page.locator(".page-card");
+    expect(await cards.count()).toBeGreaterThan(0);
+    for (const card of await cards.all()) {
+      expect((await card.locator("textarea").inputValue()).trim().length).toBeGreaterThan(100);
+      const canvas = card.locator("canvas");
+      await expect(canvas).toBeVisible();
+      const hasInk = await canvas.evaluate((element) => {
+        const pixels = element.getContext("2d").getImageData(0, 0, element.width, element.height).data;
+        // Reject empty or white-only renders, even when text extraction worked.
+        for (let i = 0; i < pixels.length; i += 4) {
+          if (pixels[i + 3] > 0 && pixels[i] < 200 && pixels[i + 1] < 200 && pixels[i + 2] < 200) return true;
+        }
+        return false;
+      });
+      expect(hasInk, `${filename}: page has rendered content`).toBe(true);
+    }
     await assertPrivate(context, page, observations);
   });
 }
